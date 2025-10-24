@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TechieTown Admin - Dashboard</title>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="../css/admin.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <!-- Optional favicon -->
+  <link rel="icon" type="image/png" href="../assets/favicon.png" />
+</head>
+
+<body>
+  <aside class="sidebar">
+    <h2>Admin Panel</h2>
+    <a href="a.dashboard.html" class="active"><i class="fas fa-chart-line"></i> Dashboard</a>
+    <a href="a.products.html"><i class="fas fa-box"></i> Products</a>
+    <a href="a.orders.html"><i class="fas fa-shopping-cart"></i> Orders</a>
+    <a href="a.customers.html"><i class="fas fa-users"></i> Customers</a>
+    <a href="a.payments.html"><i class="fas fa-money-bill-wave"></i> Payments</a>
+    <a href="a.settings.html"><i class="fas fa-cogs"></i> Settings</a>
+  </aside>
+
+  <main class="main-content">
+    <header>
+      <h1 id="adminGreeting">Welcome, Admin 👋</h1>
+      <button id="logoutBtn" class="btn-logout">Logout</button>
+
+    </header>
+
+    <!-- DASHBOARD STATS -->
+    <div class="stats">
+      <div class="card">
+        <i class="fas fa-box fa-2x"></i>
+        <h3 id="productCount">0</h3>
+        <p>Products</p>
+      </div>
+      <div class="card">
+        <i class="fas fa-shopping-cart fa-2x"></i>
+        <h3 id="orderCount">0</h3>
+        <p>Orders</p>
+      </div>
+      <div class="card">
+        <i class="fas fa-money-bill-wave fa-2x"></i>
+        <h3 id="paymentCount">0</h3>
+        <p>Payments</p>
+      </div>
+    </div>
+
+    <!-- RECENT PAYMENTS -->
+    <section>
+      <h2>Recent Payments</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Payment ID</th>
+            <th>Transaction ID</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody id="paymentsTableBody">
+          <tr>
+            <td colspan="5" style="text-align:center; color:#777;">Loading payments...</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- RECENT ORDERS -->
+    <section>
+      <h2>Recent Orders</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>User Email</th>
+            <th>Total Amount</th>
+            <th>Payment Status</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody id="ordersTableBody">
+          <tr>
+            <td colspan="5" style="text-align:center; color:#777;">Loading orders...</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <!-- JS -->
+  <script src="../js/admin-dashboard.js" defer></script>
+  <script src="/js/adminLogout.js"></script>
+</body>
+</html>

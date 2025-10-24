@@ -1,0 +1,61 @@
+{
+  "name": "mpesa-checkout",
+  "version": "1.0.1",
+  "description": "Backend API for M-Pesa Checkout Integration using Express and Node.js",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "lint": "eslint .",
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "tunnel": "ngrok http 3000",
+    "dev:tunnel": "concurrently \"nodemon server.js\" \"ngrok http 3000\"",
+    "test": "jest"
+  },
+  "keywords": [
+    "mpesa",
+    "checkout",
+    "daraja",
+    "express",
+    "nodejs",
+    "api"
+  ],
+  "author": "TechieTown",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/mpesa-checkout.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/mpesa-checkout/issues"
+  },
+  "homepage": "https://github.com/yourusername/mpesa-checkout#readme",
+  "dependencies": {
+    "axios": "^1.12.2",
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^4.21.2",
+    "express-async-handler": "^1.2.0",
+    "express-rate-limit": "^8.1.0",
+    "helmet": "^8.1.0",
+    "joi": "^17.13.3",
+    "jsonwebtoken": "^9.0.2",
+    "mongodb": "^6.20.0",
+    "mongoose": "^8.19.1",
+    "morgan": "^1.10.1",
+    "multer": "^2.0.2",
+    "ngrok": "^5.0.0-beta.2",
+    "nodemailer": "^7.0.9",
+    "winston": "^3.18.3"
+  },
+  "devDependencies": {
+    "eslint": "^8.44.0",
+    "jest": "^29.7.0",
+    "nodemon": "^3.1.0",
+    "supertest": "^6.3.3"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

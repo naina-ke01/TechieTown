@@ -1,0 +1,3481 @@
+TechieTown/
+css/
+about/
+.vs
+data1
+engine1/
+fonts
+│
+├── backend/
+│   ├── server.js
+|   |-- package.json
+|   |-- .env
+|   |-- mpesa-checkout@1.0.0
+|   |-- package-lock.json
+|   |-- mpesa-callbacks.json
+|   |-- logger.info(message.trim())
+|   |-- logs/
+|   |-- app.log
+|   |-- node_module
+|   |-- npm
+|   |-- node
+|   |
+|   └── config/
+|   |     db.js
+|   |
+|   └── tests/
+|   |     stkpush.js
+|   |
+|   └── utils/
+|   |    filehelpe.js
+|   |    logger.js
+|   |    mpesa.js
+|   |    validation.js
+|   |    generateHash.js
+|   |
+│   ├── routes/
+│   │   ├  productRoute.js
+|   |	|   adminRoute.js
+|   |   |   paymentRoute.js 
+|   |	|   mpesaRoutes.js
+│   │   ├   userRoute.js
+│   │   ├   orderRoute.js
+│   │   ├   shippingRoute.js
+│   │   └   refundRoute.js
+|   |
+|   └── tests/
+|   |    server.js
+|   |    stkpush.js
+|   |    testLogin.js
+|   |    verifyhash.js 
+|   |
+│   ├── controllers/
+│   │   ├  productController.js
+|   |   |   adminControllers.js
+|   |   |   mpesaController.js
+│   │   ├   userController.js
+│   │   ├   orderController.js
+│   │   ├   shippingController.js
+|   |   |   paymentController.js 
+│   │   └── refundController.js
+|   |
+|   └── middleware/
+|   |     authMiddleware.js
+|   |     uploadMiddleware.js
+│   └── models/
+│    |  ├── ProductModel.js
+│    |  ├── userModel.js
+|    |  |   paymentModel.js
+│    |  ├── orderModel.js
+|    |  |   shippingModel.js 
+│    |  └── refundModel.js
+|    └──scripts/
+|	|   createAdmin.js 
+|	|   createOrResetAdmin.js
+|	|   genToken.js
+|	└── testConnection.js
+│
+├frontend/
+├── public/
+|   |	a.login.html
+│   ├── index.html
+│   ├── products.html
+│   ├── cart.html
+│   ├── mpesa-checkout.html
+│   ├── login.html
+│   ├── register.html
+│   ├── refund.html
+│   ├── admin/
+│   │   ├── a.dashboard.html
+│   │   ├── a.products.html
+│   │   ├── a.orders.html
+│   │   ├── a.customers.html
+|   |	|   a.payments.html
+│   │   └── a.settings.html
+│   ├── css/
+│   │   ├── style.css
+│   │   └── admin.css
+│   └── js/
+│       ├── cart.js
+│       ├── minicart.js
+│       ├── adminCheck.js
+|       |   product.js
+|	|   product.js
+|       |   mpesa-checkout.js
+|       |   payment-success.js
+│       ├── user.js
+│       ├── admin.js
+|	|   adminlogin.js
+|	|   admin-dashboard.js
+│       └── api.js
+
+
+
+
+
+
+
+
+
+
+
+
+Perfect 👍 — that’s an excellent TechieTown folder structure! You’ve already separated your backend and frontend cleanly, which is ideal for a Node.js + HTML/CSS setup.
+Here’s a quick professional breakdown and improvement checklist (like what a full-stack engineer or senior reviewer would note):
+🧩 Project Overview
+Root folders:
+backend/ → Node.js server, APIs, M-Pesa integration, and business logic.
+frontend/ → HTML, CSS, and client-side JavaScript.
+data1, engine1/, .vs/ → Likely local/test or IDE-generated folders (optional for deployment).
+⚙️ Backend Folder Review
+✅ Well Organized:
+server.js → Entry point for Express app.
+routes/ → All routes modularized (great structure!).
+controllers/ → Business logic separated from routes.
+models/ → Mongoose models for MongoDB (assumed).
+middleware/ → Custom middlewares like authentication & upload handling.
+utils/ → Utility files (e.g., M-Pesa integration, file helpers, validation).
+tests/ → Integration/unit tests — good for debugging STK push or login.
+💡 Suggestions for polish:
+Ensure each route has a matching controller. Example:
+paymentRoute.js → uses paymentController.js
+refundRoute.js → uses refundController.js
+mpesaRoute.js → uses mpesaController.js
+Move generateHash.js and logger.js inside utils/ if not already (for consistency).
+Use dotenv in server.js to load .env before imports that depend on environment variables.
+Add a config/ folder for db.js (MongoDB connection), mpesaConfig.js, etc.
+💳 M-Pesa Integration Check
+You have:
+mpesa-checkout@1.0.0
+mpesa-callbacks.json
+mpesa.js
+stkpush.js
+✅ This looks set up for:
+STK Push requests
+Callback validation and logging
+Hash/token verification
+→ Just ensure mpesaRoute.js includes a /stkpush, /callback, and /verify endpoint.
+
+
+
+having this as our admin a.dashboard .html create layouts for the rest interacting with my site
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TechieTown Admin Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: #000;
+      color: #fff;
+      display: flex;
+      height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 250px;
+      background: linear-gradient(135deg, #111, #222);
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+      box-shadow: 4px 0 15px rgba(212, 175, 55, 0.2);
+    }
+
+    .sidebar h2 {
+      color: #d4af37;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .sidebar a {
+      text-decoration: none;
+      color: #bbb;
+      padding: 12px 15px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      transition: 0.3s;
+    }
+
+    .sidebar a:hover, .sidebar a.active {
+      background: #d4af37;
+      color: #111;
+    }
+
+    .sidebar i {
+      margin-right: 10px;
+    }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      background: #111;
+      padding: 30px;
+      overflow-y: auto;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+
+    header h1 {
+      color: #d4af37;
+      font-size: 1.5rem;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .card {
+      background: #1a1a1a;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 0 15px rgba(212, 175, 55, 0.1);
+      transition: 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 0 25px rgba(212, 175, 55, 0.2);
+    }
+
+    .card h3 {
+      margin: 10px 0 5px;
+      color: #d4af37;
+    }
+
+    .card p {
+      color: #bbb;
+      font-size: 0.95rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #1a1a1a;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    table th, table td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #333;
+    }
+
+    table th {
+      background: #222;
+      color: #d4af37;
+    }
+
+    .btn {
+      background: #d4af37;
+      color: #111;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    .btn:hover {
+      background: #c19e34;
+    }
+  </style>
+</head>
+
+<body>
+  <aside class="sidebar">
+    <h2>Admin Panel</h2>
+    <a href="a.products.html" class="active"><i class="fas fa-box"></i> Products</a>
+    <a href="a.order.html"><i class="fas fa-shopping-cart"></i> Orders</a>
+    <a href="a.customers.html"><i class="fas fa-users"></i> Customers</a>
+    <a href="a.payments.html"><i class="fas fa-money-bill-wave"></i> Payments</a>
+    <a href="a.settings.html"><i class="fas fa-cogs"></i> Settings</a>
+  </aside>
+
+  <main class="main-content">
+    <header>
+      <h1>Welcome, Admin 👋</h1>
+      <button class="btn">Logout</button>
+    </header>
+
+    <div class="stats">
+      <div class="card">
+        <i class="fas fa-box fa-2x"></i>
+        <h3>120</h3>
+        <p>Products</p>
+      </div>
+      <div class="card">
+        <i class="fas fa-shopping-cart fa-2x"></i>
+        <h3>45</h3>
+        <p>Orders Today</p>
+      </div>
+      <div class="card">
+        <i class="fas fa-users fa-2x"></i>
+        <h3>560</h3>
+        <p>Customers</p>
+      </div>
+      <div class="card">
+        <i class="fas fa-money-bill-wave fa-2x"></i>
+        <h3>KES 125,000</h3>
+        <p>Revenue</p>
+      </div>
+    </div>
+
+    <section>
+      <h2 style="color:#d4af37;">Recent Orders</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Customer</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>#1001</td>
+            <td>John Doe</td>
+            <td>KES 3,200</td>
+            <td><span style="color:lightgreen;">Completed</span></td>
+            <td>2025-10-13</td>
+          </tr>
+          <tr>
+            <td>#1002</td>
+            <td>Mary W.</td>
+            <td>KES 7,800</td>
+            <td><span style="color:orange;">Pending</span></td>
+            <td>2025-10-13</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+</body>
+</html>
+
+
+
+
+express axios cors dotenv mongoose bcrypt
+
+
+
+
+
+
+
+
+update and generate final codes for each
+
+import express from "express";
+import axios from "axios";
+import cors from "cors";
+import dotenv from "dotenv";
+import mongoose from "mongoose";
+import bcrypt from "bcrypt";
+import helmet from "helmet";
+import rateLimit from "express-rate-limit";
+import path from "path";
+import { fileURLToPath } from "url";
+import morgan from "morgan";
+import jwt from "jsonwebtoken";
+import fs from "fs";
+
+// Utility imports
+import logger from "./utils/logger.js";
+import { formatPhoneNumber, getAccessToken } from "./utils/mpesa.js";
+import { appendToJSONFile } from "./utils/fileHelper.js";
+import { stkPushSchema } from "./utils/validation.js";
+
+// Routes & Models
+import User from "./models/userModel.js";
+import adminRoutes from "./routes/admin.js";
+import paymentRoute from "./routes/paymentRoute.js";
+import orderRoute from "./routes/orderRoute.js";
+import userRoute from "./routes/userRoute.js";
+import refundRoute from "./routes/refundRoute.js";
+import shippingRoute from "./routes/shippingRoute.js";
+import productRoute from "./routes/productRoute.js";
+
+// --- Fix __dirname in ES Modules ---
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// --- Load Environment Variables ---
+dotenv.config();
+
+const {
+  MONGODB_URI,
+  CONSUMER_KEY,
+  CONSUMER_SECRET,
+  PASSKEY,
+  SHORTCODE = "174379",
+  NGROK_URL,
+  NODE_ENV,
+  PORT = 3000,
+  FRONTEND_URL,
+  JWT_SECRET,
+} = process.env;
+
+// --- Validate Environment ---
+if (!MONGODB_URI) throw new Error("❌ Missing MONGODB_URI in .env");
+if (!CONSUMER_KEY || !CONSUMER_SECRET || !PASSKEY)
+  throw new Error("❌ Missing M-Pesa credentials in .env");
+if (!JWT_SECRET)
+  throw new Error("❌ Missing JWT_SECRET in .env");
+
+// --- Define M-Pesa Base URL ---
+const baseURL =
+  NODE_ENV === "production"
+    ? "https://api.safaricom.co.ke"
+    : "https://sandbox.safaricom.co.ke";
+
+const callbackURL = `${NGROK_URL}/callback`;
+const CALLBACK_FILE = path.resolve(__dirname, "../mpesa-callbacks.json");
+
+// --- Initialize Express App ---
+const app = express();
+
+// --- Middleware ---
+app.use(
+  cors({
+    origin: FRONTEND_URL ? [FRONTEND_URL] : "*",
+    credentials: true,
+  })
+);
+app.use(helmet());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 200 }));
+app.use("/uploads", express.static("uploads"));
+app.use(express.static(path.join(__dirname, "../public")));
+app.use(
+  morgan("combined", {
+    stream: { write: (message) => logger.info(message.trim()) },
+  })
+);
+
+// --- MongoDB Connection ---
+async function connectToMongo() {
+  try {
+    await mongoose.connect(MONGODB_URI);
+    logger.info("✅ Connected to MongoDB Atlas");
+  } catch (err) {
+    logger.error("❌ MongoDB Connection Error: " + err.message);
+    process.exit(1);
+  }
+}
+
+// --- Create Default Admin ---
+async function createDefaultAdmin() {
+  try {
+    const existingAdmin = await User.findOne({ role: "admin" });
+    if (!existingAdmin) {
+      const hashedPassword = await bcrypt.hash("admin123", 10);
+      const admin = new User({
+        name: "TechieTown Admin",
+        email: "admin@techietown.com",
+        password: hashedPassword,
+        role: "admin",
+      });
+      await admin.save();
+      logger.info("👑 Admin created: admin@techietown.com / admin123");
+    } else {
+      logger.info("✅ Admin already exists");
+    }
+  } catch (err) {
+    logger.error("❌ Failed to create admin: " + err.message);
+  }
+}
+
+// --- JWT Middleware ---
+function authMiddleware(req, res, next) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader)
+    return res.status(401).json({ message: "Authorization header missing" });
+
+  const token = authHeader.split(" ")[1];
+  if (!token) return res.status(401).json({ message: "Token missing" });
+
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    req.user = decoded;
+    next();
+  } catch {
+    return res.status(401).json({ message: "Invalid or expired token" });
+  }
+}
+
+// ✅ ================================
+// ✅ VERIFY TOKEN ENDPOINT (NEW)
+// ✅ ================================
+app.get("/api/verify-token", (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res
+        .status(401)
+        .json({ valid: false, message: "No token provided" });
+    }
+
+    const token = authHeader.split(" ")[1];
+
+    jwt.verify(token, JWT_SECRET, (err, decoded) => {
+      if (err) {
+        return res
+          .status(401)
+          .json({ valid: false, message: "Invalid or expired token" });
+      }
+
+      return res.json({ valid: true, user: decoded });
+    });
+  } catch (error) {
+    logger.error("❌ Token verification error: " + error.message);
+    res.status(500).json({ valid: false, message: "Server error verifying token" });
+  }
+});
+
+// --- M-Pesa STK Push ---
+app.post("/stkpush", async (req, res) => {
+  const { error, value } = stkPushSchema.validate(req.body);
+  if (error)
+    return res.status(400).json({ error: error.details[0].message });
+
+  const { phone, amount } = value;
+
+  try {
+    const token = await getAccessToken(CONSUMER_KEY, CONSUMER_SECRET, baseURL);
+    const timestamp = new Date()
+      .toISOString()
+      .replace(/[^0-9]/g, "")
+      .slice(0, 14);
+    const password = Buffer.from(
+      `${SHORTCODE}${PASSKEY}${timestamp}`
+    ).toString("base64");
+
+    const payload = {
+      BusinessShortCode: SHORTCODE,
+      Password: password,
+      Timestamp: timestamp,
+      TransactionType: "CustomerPayBillOnline",
+      Amount: amount,
+      PartyA: formatPhoneNumber(phone),
+      PartyB: SHORTCODE,
+      PhoneNumber: formatPhoneNumber(phone),
+      CallBackURL: callbackURL,
+      AccountReference: "TechieTown",
+      TransactionDesc: "Payment for TechieTown Order",
+    };
+
+    const response = await axios.post(
+      `${baseURL}/mpesa/stkpush/v1/processrequest`,
+      payload,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+
+    logger.info("✅ STK Push Initiated: " + JSON.stringify(response.data));
+    res.json({ success: true, data: response.data });
+  } catch (error) {
+    logger.error("❌ STK Push Error: " + (error.response?.data || error.message));
+    res.status(500).json({
+      error: "Failed to initiate payment",
+      details: error.response?.data || error.message,
+    });
+  }
+});
+
+// --- M-Pesa Callback ---
+app.post("/callback", async (req, res) => {
+  try {
+    await appendToJSONFile(CALLBACK_FILE, req.body);
+    logger.info("📩 Callback received and stored");
+    res.json({ message: "Callback stored" });
+  } catch (err) {
+    logger.error("❌ Callback Save Error: " + err.message);
+    res.status(500).json({ error: "Callback storage failed" });
+  }
+});
+
+// --- Protected Routes ---
+app.use("/api/admin", adminRoutes);
+app.use("/api/payments", authMiddleware, paymentRoute);
+app.use("/api/products", authMiddleware, productRoute);
+app.use("/api/orders", authMiddleware, orderRoute);
+app.use("/api/users", authMiddleware, userRoute);
+app.use("/api/refunds", authMiddleware, refundRoute);
+app.use("/api/shipping", authMiddleware, shippingRoute);
+
+// --- Global Error Handler ---
+app.use((err, req, res, next) => {
+  logger.error("🔥 Unhandled Error: " + err.stack);
+  res.status(500).json({ error: "Internal Server Error" });
+});
+
+// --- Admin Dashboard Route ---
+app.get("/api/admin/dashboard", authMiddleware, async (req, res) => {
+  try {
+    if (req.user.role !== "admin") {
+      return res.status(403).json({ message: "Access denied" });
+    }
+
+    const productCount = await mongoose.model("Product").countDocuments();
+    const orderCount = await mongoose.model("Order").countDocuments();
+    const paymentCount = await mongoose.model("Payment").countDocuments();
+
+    const recentOrders = await mongoose
+      .model("Order")
+      .find()
+      .sort({ createdAt: -1 })
+      .limit(5)
+      .select("_id customer amount status createdAt");
+
+    res.json({
+      products: productCount,
+      orders: orderCount,
+      payments: paymentCount,
+      recentOrders: recentOrders.map((o) => ({
+        _id: o._id,
+        customer: o.customer || "Unknown",
+        amount: o.amount || 0,
+        status: o.status || "Pending",
+        date: o.createdAt,
+      })),
+    });
+  } catch (err) {
+    logger.error("❌ Dashboard Fetch Error: " + err.message);
+    res.status(500).json({ message: "Failed to load dashboard" });
+  }
+});
+
+// --- Start Server ---
+async function main() {
+  await connectToMongo();
+  await createDefaultAdmin();
+
+  const server = app.listen(PORT, () =>
+    logger.info(`🚀 TechieTown Server running on http://localhost:${PORT}`)
+  );
+
+  process.on("SIGINT", () => {
+    logger.info("\n🧹 Shutting down gracefully...");
+    server.close(() => {
+      mongoose.connection.close(false, () => {
+        logger.info("🛑 MongoDB disconnected.");
+        process.exit(0);
+      });
+    });
+  });
+}
+
+main().catch((err) => {
+  logger.error("❌ Server Startup Error: " + err.message);
+  process.exit(1);
+});
+
+
+import jwt from "jsonwebtoken";
+import User from "../models/userModel.js";
+
+export const protect = async (req, res, next) => {
+  let token;
+
+  const authHeader = req.headers.authorization;
+
+  if (authHeader && authHeader.startsWith("Bearer ")) {
+    token = authHeader.split(" ")[1];
+  }
+
+  if (!token) {
+    return res.status(401).json({ error: "Not authorized, token missing" });
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    req.user = await User.findById(decoded.id).select("-password");
+    if (!req.user) {
+      return res.status(401).json({ error: "User not found" });
+    }
+
+    next();
+  } catch (err) {
+    return res.status(401).json({ error: "Not authorized, token failed" });
+  }
+};
+
+// Middleware to allow only admins
+export const adminOnly = (req, res, next) => {
+  if (!req.user || req.user.role !== "admin") {
+    return res.status(403).json({ error: "Admin access required" });
+  }
+  next();
+};
+
+
+import mongoose from "mongoose";
+import bcrypt from "bcrypt";
+
+const userSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    lowercase: true,
+    trim: true,
+  },
+  password: {
+    type: String,
+    required: true,
+  },
+  role: {
+    type: String,
+    enum: ["customer", "admin"],
+    default: "customer",
+  },
+  addresses: [
+    {
+      label: String,
+      street: String,
+      city: String,
+      postalCode: String,
+      country: String,
+    },
+  ],
+}, { timestamps: true });
+
+// 🔐 Automatically hash password before save
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+
+  try {
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
+
+// 🔐 Compare password method
+userSchema.methods.matchPassword = async function (enteredPassword) {
+  return bcrypt.compare(enteredPassword, this.password);
+};
+
+const User = mongoose.model("User", userSchema);
+export default User;
+
+
+const User = require('../models/userModel');
+const asyncHandler = require('express-async-handler');
+const jwt = require('jsonwebtoken');
+
+// Generate JWT Token
+const generateToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d' });
+
+// @desc    Register new user
+// @route   POST /register
+// @access  Public
+const registerUser = asyncHandler(async (req, res) => {
+  const { name, email, password } = req.body;
+
+  const userExists = await User.findOne({ email });
+  if (userExists) {
+    res.status(400);
+    throw new Error('User already exists');
+  }
+
+  const user = await User.create({ name, email, password });
+
+  if (user) {
+    res.status(201).json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      token: generateToken(user._id),
+    });
+  } else {
+    res.status(400);
+    throw new Error('Invalid user data');
+  }
+});
+
+// @desc    Auth user & get token
+// @route   POST /login
+// @access  Public
+const authUser = asyncHandler(async (req, res) => {
+  const { email, password } = req.body;
+
+  const user = await User.findOne({ email });
+
+  if (user && (await user.matchPassword(password))) {
+    res.json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      token: generateToken(user._id),
+    });
+  } else {
+    res.status(401);
+    throw new Error('Invalid email or password');
+  }
+});
+
+// @desc    Get user profile + orders and addresses
+// @route   GET /profile
+// @access  Private
+const getUserProfile = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id)
+    .populate('orders')
+    .select('-password');
+
+  if (user) {
+    res.json(user);
+  } else {
+    res.status(404);
+    throw new Error('User not found');
+  }
+});
+
+// @desc    Save user address
+// @route   POST /profile/address
+// @access  Private
+const saveAddress = asyncHandler(async (req, res) => {
+  const { label, street, city, postalCode, country } = req.body;
+  const user = await User.findById(req.user._id);
+
+  if (user) {
+    user.addresses.push({ label, street, city, postalCode, country });
+    await user.save();
+    res.status(201).json(user.addresses);
+  } else {
+    res.status(404);
+    throw new Error('User not found');
+  }
+});
+
+module.exports = {
+  registerUser,
+  authUser,
+  getUserProfile,
+  saveAddress,
+};
+
+
+import express from "express";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import User from "../models/userModel.js";
+import Order from "../models/orderModel.js";
+import { protect, adminOnly } from "../middleware/authMiddleware.js";
+
+const router = express.Router();
+
+// @route   POST /api/users/register
+// @desc    Register new user
+// @access  Public
+router.post("/register", async (req, res) => {
+  try {
+    const { name, email, password } = req.body;
+
+    if (!name || !email || !password) {
+      return res.status(400).json({ error: "Please fill all required fields" });
+    }
+
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ error: "Email already in use" });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = new User({ name, email, password: hashedPassword });
+    await user.save();
+
+    res.status(201).json({ message: "User registered successfully" });
+  } catch (err) {
+    console.error("Register Error:", err);
+    res.status(500).json({ error: "Registration failed" });
+  }
+});
+
+// @route   POST /api/users/login
+// @desc    Authenticate user and get token
+// @access  Public
+router.post("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({ error: "Email and password required" });
+    }
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ error: "Invalid credentials" });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ error: "Invalid credentials" });
+    }
+
+    const token = jwt.sign(
+      { id: user._id, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
+    res.json({
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+    });
+  } catch (err) {
+    console.error("Login Error:", err);
+    res.status(500).json({ error: "Login failed" });
+  }
+});
+
+// @route   GET /api/users/profile
+// @desc    Get logged-in user profile
+// @access  Private
+router.get("/profile", protect, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("-password");
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    res.json(user);
+  } catch (err) {
+    console.error("Get Profile Error:", err);
+    res.status(500).json({ error: "Failed to fetch profile" });
+  }
+});
+
+// @route   POST /api/users/profile/address
+// @desc    Add address to logged-in user's profile
+// @access  Private
+router.post("/profile/address", protect, async (req, res) => {
+  const { label, street, city, postalCode, country } = req.body;
+
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    const newAddress = { label, street, city, postalCode, country };
+    user.addresses = user.addresses || [];
+    user.addresses.push(newAddress);
+    await user.save();
+
+    res.status(201).json(user.addresses);
+  } catch (err) {
+    console.error("Add Address Error:", err);
+    res.status(500).json({ error: "Failed to save address" });
+  }
+});
+
+// @route   GET /api/users/profile/orders
+// @desc    Get orders of logged-in user
+// @access  Private
+router.get("/profile/orders", protect, async (req, res) => {
+  try {
+    const orders = await Order.find({ user: req.user.id }).sort({ createdAt: -1 });
+    res.json(orders);
+  } catch (err) {
+    console.error("Get Orders Error:", err);
+    res.status(500).json({ error: "Failed to fetch orders" });
+  }
+});
+
+// ===== Admin Only Routes =====
+
+// @route   GET /api/users
+// @desc    Get all users (admin only)
+// @access  Private/Admin
+router.get("/", protect, adminOnly, async (req, res) => {
+  try {
+    const users = await User.find().select("-password");
+    res.json(users);
+  } catch (err) {
+    console.error("Get Users Error:", err);
+    res.status(500).json({ error: "Failed to fetch users" });
+  }
+});
+
+// @route   DELETE /api/users/:id
+// @desc    Delete a user by ID (admin only)
+// @access  Private/Admin
+router.delete("/:id", protect, adminOnly, async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    await user.remove();
+    res.json({ message: "User deleted" });
+  } catch (err) {
+    console.error("Delete User Error:", err);
+    res.status(500).json({ error: "Failed to delete user" });
+  }
+});
+
+export default router;
+
+
+import { productsAPI, ordersAPI, paymentsAPI } from "./api.js";import { productsAPI, ordersAPI, paymentsAPI } from "./api.js";
+
+async function loadDashboard() {
+  try {
+    // ✅ Fetch all necessary data in parallel
+    const [products, orders, payments] = await Promise.all([
+      productsAPI.fetchProducts(),
+      ordersAPI.fetchOrders(),
+      paymentsAPI.fetchPayments(),
+    ]);
+
+    // ✅ Update dashboard summary counts
+    updateSummaryCounts({ products, orders, payments });
+
+    // ✅ Populate tables
+    renderOrdersTable(orders);
+    renderPaymentsTable(payments);
+
+  } catch (error) {
+    console.error("❌ Error loading dashboard data:", error.message || error);
+    alert("⚠️ Failed to load dashboard data. Check the console.");
+  }
+}
+
+function updateSummaryCounts({ products, orders, payments }) {
+  const safeSet = (id, value) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = value;
+  };
+
+  safeSet("productsCount", products.length);
+  safeSet("ordersCount", orders.length);
+  safeSet("paymentsCount", payments.length);
+}
+
+function renderOrdersTable(orders) {
+  const tbody = document.getElementById("ordersTableBody");
+  if (!tbody) return;
+
+  tbody.innerHTML = "";
+  orders.forEach(order => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${order._id}</td>
+      <td>${order.user?.email || "Guest"}</td>
+      <td>KES ${order.total.toLocaleString()}</td>
+      <td>${order.payment?.status || "Pending"}</td>
+      <td>${new Date(order.createdAt).toLocaleString()}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function renderPaymentsTable(payments) {
+  const paymentsTbody = document.getElementById("paymentsTableBody");
+  if (!paymentsTbody) return;
+
+  paymentsTbody.innerHTML = "";
+  payments.forEach(payment => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${payment._id}</td>
+      <td>${payment.transactionId || "-"}</td>
+      <td>KES ${payment.amount.toLocaleString()}</td>
+      <td>${payment.status}</td>
+      <td>${new Date(payment.createdAt).toLocaleString()}</td>
+    `;
+    paymentsTbody.appendChild(tr);
+  });
+}
+
+// 👂 Load when DOM is ready
+document.addEventListener("DOMContentLoaded", loadDashboard);
+
+
+import express from "express";
+import Payment from "../models/paymentModel.js";
+import { protect, adminOnly } from "../middleware/authMiddleware.js";
+
+const router = express.Router();
+
+// --- 1️⃣ Log STK Push Request ---
+// Public route, logs payment initiation
+router.post("/stkpush", async (req, res) => {
+  try {
+    const { phone, amount, orderId } = req.body;
+
+    // Save initial payment log with "initiated" status
+    const payment = new Payment({
+      phone,
+      amount,
+      orderId: orderId || null,
+      status: "initiated",
+    });
+    await payment.save();
+
+    res.json({ success: true, payment });
+  } catch (err) {
+    console.error("❌ Error logging STK push:", err.message);
+    res.status(500).json({ error: "Failed to log STK push" });
+  }
+});
+
+// --- 2️⃣ Log M-Pesa Callback ---
+// Public endpoint to receive payment callbacks
+router.post("/callback", async (req, res) => {
+  try {
+    console.log("📩 M-Pesa Callback:", req.body);
+    const callback = req.body?.Body?.stkCallback;
+
+    if (!callback)
+      return res.status(400).json({ error: "Invalid callback structure" });
+
+    const {
+      MerchantRequestID,
+      CheckoutRequestID,
+      ResultCode,
+      ResultDesc,
+      CallbackMetadata,
+    } = callback;
+
+    const mpesaData = {
+      merchantRequestId: MerchantRequestID,
+      checkoutRequestId: CheckoutRequestID,
+      resultCode: ResultCode,
+      resultDesc: ResultDesc,
+      status: ResultCode === 0 ? "success" : "failed",
+      callbackData: callback,
+    };
+
+    // If successful, extract more detailed transaction info
+    if (ResultCode === 0 && CallbackMetadata) {
+      const items = CallbackMetadata.Item.reduce((acc, item) => {
+        acc[item.Name] = item.Value;
+        return acc;
+      }, {});
+      mpesaData.mpesaReceiptNumber = items.MpesaReceiptNumber || "";
+      mpesaData.transactionDate = items.TransactionDate || "";
+      mpesaData.phone = items.PhoneNumber?.toString() || "";
+      mpesaData.amount = items.Amount || 0;
+    }
+
+    // Update existing payment by CheckoutRequestID or create new one
+    const payment = await Payment.findOneAndUpdate(
+      { checkoutRequestId: CheckoutRequestID },
+      mpesaData,
+      { upsert: true, new: true }
+    );
+
+    console.log("✅ Payment updated:", payment._id);
+    res.json({ success: true, message: "Callback logged", payment });
+  } catch (err) {
+    console.error("❌ Error logging callback:", err.message);
+    res.status(500).json({ error: "Callback logging failed" });
+  }
+});
+
+// --- 3️⃣ Get All Payments (Admin Only) ---
+router.get("/", protect, adminOnly, async (req, res) => {
+  try {
+    const payments = await Payment.find()
+      .sort({ createdAt: -1 })
+      .limit(100);
+    res.json(payments);
+  } catch (err) {
+    console.error("❌ Error fetching payments:", err.message);
+    res.status(500).json({ error: "Failed to fetch payments" });
+  }
+});
+
+// --- 4️⃣ Get Single Payment by ID (Admin Only) ---
+router.get("/:id", protect, adminOnly, async (req, res) => {
+  try {
+    const payment = await Payment.findById(req.params.id);
+    if (!payment) return res.status(404).json({ error: "Payment not found" });
+    res.json(payment);
+  } catch (err) {
+    console.error("❌ Error fetching payment:", err.message);
+    res.status(500).json({ error: "Failed to fetch payment" });
+  }
+});
+
+export default router;
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy" content="
+  default-src 'self';
+  script-src 'self' 'unsafe-inline';
+  style-src 'self' 'unsafe-inline';
+  connect-src 'self' https://annelle-climatic-antwan.ngrok-free.dev;
+">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Login | TechieTown</title>
+  <link rel="stylesheet" href="../css/admin.css" />
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #000;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .login-box {
+      background: #111;
+      padding: 40px;
+      border-radius: 12px;
+      width: 350px;
+      box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+    }
+
+    .login-box h2 {
+      color: #d4af37;
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .login-box input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 8px;
+      background: #222;
+      color: #fff;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      background: #d4af37;
+      color: #111;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .btn:hover {
+      background: #c19e34;
+    }
+
+    .error {
+      color: #ff6b6b;
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .success {
+      color: #90ee90;
+      text-align: center;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="login-box">
+    <h2>Admin Login</h2>
+    <input type="email" id="email" placeholder="Email" required />
+    <input type="password" id="password" placeholder="Password" required />
+    <button class="btn" id="loginBtn">Login</button>
+    <p id="message"></p>
+  </div>
+
+<script src="../js/adminLogin.js" defer></script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+server.js
+\package.json
+.env
+mpesa-checkout@1.0.0
+package-lock.json
+mpesa-callbacks.json
+logger.info(message.trim())
+logs/
+app.log
+node_module
+npm
+node
+generateHash.js
+tests/
+stkpush.js
+utils/
+filehelpe.js
+logger.js
+mpesa.js
+validation.js
+routes/
+productRoute.js
+adminRoute.js
+paymentRoute.js 
+mpesaRoute.js
+userRoute.js
+orderRoute.js
+shippingRoute.js
+refundRoute.js
+tests/
+server.js
+stkpush.js
+testLogin.js
+verifyhash.js 
+controllers/
+productController.js
+mpesaController.js
+userController.js
+orderController.js
+shippingController.js
+refundController.js
+paymentController.js 
+middleware/
+authMiddleware.js
+uploadMiddleware.js
+models/
+ProductModel.js
+userModel.js
+paymentModel.js
+orderModel.js
+shippingModel.js 
+refundModel.js
+scripts/
+createAdmin.js 
+createOrResetAdmin.js
+genToken.js
+testConnection.js
+frontend/
+public/
+index.html
+a.login.html
+products.html
+cart.html
+mpesa-checkout.html
+login.html
+register.html
+refund.html
+admin/
+a.dashboard.html
+a.products.html
+a.orders.html
+a.customers.html
+a.payments.html
+a.settings.html
+css/
+style.css
+admin.css
+js/
+cart.js
+minicart.js
+adminCheck.js.js            
+product.js
+product.js
+user.js
+admin.js
+adminlogin.js	    
+admin-dashboard.js
+api.js
+
+
+
+
+
+
+backend/server.js
+// server.js
+import dotenv from "dotenv";
+import express from "express";
+import axios from "axios";
+import cors from "cors";
+import mongoose from "mongoose";
+import bcrypt from "bcrypt";
+import helmet from "helmet";
+import rateLimit from "express-rate-limit";
+import path from "path";
+import { fileURLToPath } from "url";
+import morgan from "morgan";
+import jwt from "jsonwebtoken";
+import fs from "fs";
+
+import logger from "./utils/logger.js";
+import { formatPhoneNumber, getAccessToken } from "./utils/mpesa.js";
+import { appendToJSONFile } from "./utils/fileHelper.js";
+import { stkPushSchema } from "./utils/validation.js";
+
+import User from "./models/userModel.js";
+import Product from "./models/productModel.js";
+import Order from "./models/orderModel.js";
+import Payment from "./models/paymentModel.js";
+
+import adminRoutes from "./routes/admin.js";
+import paymentRoute from "./routes/paymentRoute.js";
+import orderRoute from "./routes/orderRoute.js";
+import userRoute from "./routes/userRoute.js";
+import refundRoute from "./routes/refundRoute.js";
+import shippingRoute from "./routes/shippingRoute.js";
+import productRoute from "./routes/productRoute.js";
+
+import { protect, adminOnly } from "./middleware/authMiddleware.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// === Load environment ===
+dotenv.config();
+
+const {
+  MONGODB_URI,
+  CONSUMER_KEY,
+  CONSUMER_SECRET,
+  PASSKEY,
+  SHORTCODE = "174379",
+  NGROK_URL,
+  NODE_ENV,
+  PORT = 3000,
+  FRONTEND_URL,
+  JWT_SECRET,
+} = process.env;
+
+// === Safety Checks ===
+if (!MONGODB_URI) throw new Error("❌ MONGODB_URI missing in .env");
+if (!CONSUMER_KEY || !CONSUMER_SECRET || !PASSKEY)
+  throw new Error("❌ M-PESA credentials missing in .env");
+if (!JWT_SECRET) throw new Error("❌ JWT_SECRET missing in .env");
+
+const baseURL =
+  NODE_ENV === "production"
+    ? "https://api.safaricom.co.ke"
+    : "https://sandbox.safaricom.co.ke";
+
+// === Logs Directory + Callback File ===
+const logsDir = path.join(__dirname, "logs");
+if (!fs.existsSync(logsDir)) fs.mkdirSync(logsDir);
+
+const CALLBACK_FILE = path.join(logsDir, "mpesa-callbacks.json");
+
+// === Express setup ===
+const app = express();
+app.set("trust proxy", 1);
+app.disable("x-powered-by");
+
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+  })
+);
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (
+        !origin ||
+        origin === FRONTEND_URL ||
+        FRONTEND_URL === "*" ||
+        /ngrok-free\.dev$/.test(origin)
+      ) {
+        callback(null, true);
+      } else {
+        console.warn(`❌ Blocked CORS request from: ${origin}`);
+        callback(new Error("CORS not allowed from this origin"));
+      }
+    },
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 200 }));
+
+app.use("/uploads", express.static("uploads"));
+app.use(express.static(path.join(__dirname, "../public")));
+app.use("/admin", express.static(path.join(__dirname, "../public/admin")));
+
+app.use(
+  morgan("combined", {
+    stream: { write: (msg) => logger.info(msg.trim()) },
+  })
+);
+
+// === Utils ===
+app.get("/api/ping", (req, res) => {
+  res.json({ status: "ok", message: "Backend is live ✅" });
+});
+
+app.get("/api/config", (req, res) => {
+  res.json({
+    baseUrl: process.env.NGROK_URL || `${req.protocol}://${req.get("host")}`,
+  });
+});
+
+// === Database Connection ===
+async function connectToMongo() {
+  try {
+    await mongoose.connect(MONGODB_URI);
+    logger.info("✅ Connected to MongoDB");
+  } catch (err) {
+    logger.error("❌ MongoDB Error: " + err.message);
+    process.exit(1);
+  }
+}
+
+// === Default Admin Seed ===
+async function createDefaultAdmin() {
+  try {
+    const existingAdmin = await User.findOne({ role: "admin" });
+    if (!existingAdmin) {
+      const hash = await bcrypt.hash("admin123", 10);
+      await User.create({
+        name: "TechieTown Admin",
+        email: "admin@techietown.com",
+        password: hash,
+        role: "admin",
+      });
+      logger.info("👑 Admin created: admin@techietown.com / admin123");
+    }
+  } catch (err) {
+    logger.error("❌ Failed to create admin: " + err.message);
+  }
+}
+
+// === 🔥 STK PUSH ROUTE ===
+app.post("/api/payments/stkpush", async (req, res) => {
+  const { error, value } = stkPushSchema.validate(req.body);
+  if (error) {
+    return res.status(400).json({
+      success: false,
+      message: error.details[0].message,
+    });
+  }
+
+  const { phone, amount } = value;
+
+  try {
+    const token = await getAccessToken(CONSUMER_KEY, CONSUMER_SECRET, baseURL);
+
+    const timestamp = new Date()
+      .toLocaleString("sv-SE", { timeZone: "Africa/Nairobi" })
+      .replace(/\D/g, "");
+
+    const password = Buffer.from(`${SHORTCODE}${PASSKEY}${timestamp}`).toString("base64");
+
+    const formattedPhone = formatPhoneNumber(phone);
+
+    const payload = {
+      BusinessShortCode: SHORTCODE,
+      Password: password,
+      Timestamp: timestamp,
+      TransactionType: "CustomerPayBillOnline",
+      Amount: amount,
+      PartyA: formattedPhone,
+      PartyB: SHORTCODE,
+      PhoneNumber: formattedPhone,
+      CallBackURL: `${NGROK_URL}/api/payments/stkpush/callback`,
+      AccountReference: "TechieTown",
+      TransactionDesc: "Payment for TechieTown Order",
+    };
+
+    const { data } = await axios.post(
+      `${baseURL}/mpesa/stkpush/v1/processrequest`,
+      payload,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+
+    logger.info("✅ STK Push API Response: " + JSON.stringify(data, null, 2));
+
+    if (data.ResponseCode === "0") {
+      return res.json({
+        success: true,
+        message: "STK Push request accepted. Check your phone!",
+        data,
+      });
+    } else {
+      return res.status(400).json({
+        success: false,
+        message: data.errorMessage || "M-Pesa rejected request",
+        data,
+      });
+    }
+  } catch (err) {
+    const details = err.response?.data || err.message;
+    logger.error("❌ STK Push Error: " + JSON.stringify(details, null, 2));
+
+    res.status(500).json({
+      success: false,
+      message: "Failed to initiate payment",
+      details,
+    });
+  }
+});
+
+// === ✅ Unified M-Pesa Callback Route ===
+app.post("/api/payments/stkpush/callback", async (req, res) => {
+  try {
+    const callbackData = req.body;
+    logger.info("📩 M-Pesa Callback Received: " + JSON.stringify(callbackData, null, 2));
+    await appendToJSONFile(CALLBACK_FILE, callbackData);
+    res.status(200).json({ success: true, message: "Callback received successfully" });
+  } catch (err) {
+    logger.error("❌ Callback Error: " + err.message);
+    res.status(500).json({ success: false, message: "Failed to store callback" });
+  }
+});
+
+// === 🧾 View Saved M-Pesa Callbacks (for debugging) ===
+app.get("/api/payments/callbacks", async (req, res) => {
+  try {
+    if (!fs.existsSync(CALLBACK_FILE)) {
+      return res.status(200).json({ success: true, data: [], message: "No callbacks yet" });
+    }
+
+    const fileContent = fs.readFileSync(CALLBACK_FILE, "utf-8");
+    const data = JSON.parse(fileContent || "[]");
+
+    res.status(200).json({
+      success: true,
+      count: data.length,
+      data,
+    });
+  } catch (err) {
+    logger.error("❌ Failed to read callback file: " + err.message);
+    res.status(500).json({
+      success: false,
+      message: "Failed to read callback data",
+    });
+  }
+});
+
+
+// === Protected API Routes ===
+app.use("/api/users", userRoute);
+app.use("/api/admin", protect, adminOnly, adminRoutes);
+app.use("/api/payments", protect, paymentRoute);
+app.use("/api/products", protect, productRoute);
+app.use("/api/orders", protect, orderRoute);
+app.use("/api/refunds", protect, refundRoute);
+app.use("/api/shipping", protect, shippingRoute);
+
+// === Dashboard ===
+app.get("/api/admin/dashboard", protect, adminOnly, async (req, res) => {
+  try {
+    const [products, orders, payments] = await Promise.all([
+      Product.countDocuments(),
+      Order.countDocuments(),
+      Payment.countDocuments(),
+    ]);
+
+    const recentOrders = await Order.find()
+      .sort({ createdAt: -1 })
+      .limit(5)
+      .select("_id customer amount status createdAt");
+
+    res.json({ products, orders, payments, recentOrders });
+  } catch (err) {
+    logger.error("❌ Dashboard Error: " + err.message);
+    res.status(500).json({ message: "Dashboard failed" });
+  }
+});
+
+// === Global Error Handler ===
+app.use((err, req, res, next) => {
+  logger.error("🔥 Error: " + err.stack);
+  res.status(500).json({ error: "Internal server error" });
+});
+
+// === Start Server ===
+async function main() {
+  await connectToMongo();
+  await createDefaultAdmin();
+
+  const server = app.listen(PORT, () => {
+    logger.info(`🚀 Server running on http://localhost:${PORT}`);
+    logger.info(`📁 M-Pesa callbacks will be saved to: ${CALLBACK_FILE}`);
+  });
+
+  const shutdown = () => {
+    logger.info("👋 Gracefully shutting down...");
+    server.close(() => {
+      mongoose.connection.close(false, () => {
+        logger.info("🛑 MongoDB disconnected.");
+        process.exit(0);
+      });
+    });
+  };
+
+  process.on("SIGINT", shutdown);
+  process.on("SIGTERM", shutdown);
+}
+
+main().catch((err) => {
+  logger.error("❌ Startup Error: " + err.message);
+  process.exit(1);
+});
+
+
+backend/routes/userRoute.js
+import express from "express";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import User from "../models/userModel.js";
+
+const router = express.Router();
+
+// === LOGIN ===
+router.post("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    const user = await User.findOne({ email });
+    if (!user) return res.status(401).json({ message: "Invalid email or password" });
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(401).json({ message: "Invalid email or password" });
+
+    const token = jwt.sign(
+      { id: user._id, role: user.role },
+      process.env.JWT_SECRET || "secret",
+      { expiresIn: "7d" }
+    );
+
+    res.status(200).json({
+      message: "Login successful",
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+    });
+  } catch (err) {
+    console.error("❌ Login Error:", err.message);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// === VERIFY TOKEN ===
+router.get("/verify-token", async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({ valid: false, message: "No token provided" });
+    }
+
+    const token = authHeader.split(" ")[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    const user = await User.findById(decoded.id).select("name email role");
+    if (!user) {
+      return res.status(404).json({ valid: false, message: "User not found" });
+    }
+
+    res.status(200).json({
+      valid: true,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+    });
+  } catch (err) {
+    console.error("❌ Token verification error:", err.message);
+    res.status(401).json({ valid: false, message: "Invalid or expired token" });
+  }
+});
+
+
+export default router;
+
+
+backend/controllers/userController.js
+import User from "../models/userModel.js";
+import asyncHandler from "express-async-handler";
+import jwt from "jsonwebtoken";
+
+// Generate JWT with id and role
+const generateToken = (user) => {
+  return jwt.sign(
+    { id: user._id, role: user.role },
+    process.env.JWT_SECRET,
+    { expiresIn: "7d" }
+  );
+};
+
+// @desc Auth user & get token
+// @route POST /api/users/login
+// @access Public
+export const authUser = asyncHandler(async (req, res) => {
+  const { email, password } = req.body;
+
+  const user = await User.findOne({ email });
+  if (!user) {
+    res.status(401);
+    throw new Error("Invalid email or password");
+  }
+
+  const isMatch = await user.matchPassword(password);
+  if (!isMatch) {
+    res.status(401);
+    throw new Error("Invalid email or password");
+  }
+
+  // Return token + user info including role
+  res.json({
+    user: {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    },
+    token: generateToken(user),
+  });
+});
+
+
+
+backend/middleware/authMiddleware.js
+import jwt from "jsonwebtoken";
+import User from "../models/userModel.js";
+
+// === 🔒 Protect Middleware ===
+// Checks for a valid JWT and attaches the user to req.user
+export const protect = async (req, res, next) => {
+  try {
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({ error: "Not authorized, token missing" });
+    }
+
+    const token = authHeader.split(" ")[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    // Find the user and exclude password field
+    const user = await User.findById(decoded.id).select("-password");
+    if (!user) {
+      return res.status(401).json({ error: "User not found" });
+    }
+
+    req.user = user;
+    next();
+  } catch (err) {
+    console.error("❌ Auth Error:", err.message);
+    res.status(401).json({ error: "Not authorized, invalid or expired token" });
+  }
+};
+
+// === 🛡️ Admin Only Middleware ===
+// Ensures the logged-in user has admin privileges
+export const adminOnly = (req, res, next) => {
+  if (!req.user) {
+    return res.status(401).json({ error: "Not authorized" });
+  }
+
+  if (req.user.role !== "admin") {
+    return res.status(403).json({ error: "Admin access required" });
+  }
+
+  next();
+};
+
+
+
+backend/routes/paymentRoute.js
+import express from "express";
+import Payment from "../models/paymentModel.js";
+import { protect, adminOnly } from "../middleware/authMiddleware.js";
+
+const router = express.Router();
+
+// --- 1️Log STK Push Request ---
+// Public route, logs payment initiation
+router.post("/stkpush", async (req, res) => {
+  try {
+    const { phone, amount, orderId } = req.body;
+
+    const payment = new Payment({
+      phone,
+      amount,
+      orderId: orderId || null,
+      status: "initiated",
+    });
+
+    await payment.save();
+
+    res.json({ success: true, payment });
+  } catch (err) {
+    console.error("❌ Error logging STK push:", err.message);
+    res.status(500).json({ error: "Failed to log STK push" });
+  }
+});
+
+// --- 2️Log M-Pesa Callback ---
+// Public endpoint to receive payment callbacks
+router.post("/callback", async (req, res) => {
+  try {
+    console.log("📩 M-Pesa Callback:", req.body);
+
+    const callback = req.body?.Body?.stkCallback;
+
+    if (!callback)
+      return res.status(400).json({ error: "Invalid callback structure" });
+
+    const {
+      MerchantRequestID,
+      CheckoutRequestID,
+      ResultCode,
+      ResultDesc,
+      CallbackMetadata,
+    } = callback;
+
+    const mpesaData = {
+      merchantRequestId: MerchantRequestID,
+      checkoutRequestId: CheckoutRequestID,
+      resultCode: ResultCode,
+      resultDesc: ResultDesc,
+      status: ResultCode === 0 ? "success" : "failed",
+      callbackData: callback,
+    };
+
+    if (ResultCode === 0 && CallbackMetadata) {
+      const items = CallbackMetadata.Item.reduce((acc, item) => {
+        acc[item.Name] = item.Value;
+        return acc;
+      }, {});
+      mpesaData.mpesaReceiptNumber = items.MpesaReceiptNumber || "";
+      mpesaData.transactionDate = items.TransactionDate || "";
+      mpesaData.phone = items.PhoneNumber?.toString() || "";
+      mpesaData.amount = items.Amount || 0;
+    }
+
+    const payment = await Payment.findOneAndUpdate(
+      { checkoutRequestId: CheckoutRequestID },
+      mpesaData,
+      { upsert: true, new: true }
+    );
+
+    console.log("✅ Payment updated:", payment._id);
+    res.json({ success: true, message: "Callback logged", payment });
+  } catch (err) {
+    console.error("❌ Error logging callback:", err.message);
+    res.status(500).json({ error: "Callback logging failed" });
+  }
+});
+
+// --- 3️Get All Payments (Admin Only) ---
+router.get("/", protect, adminOnly, async (req, res) => {
+  try {
+    const payments = await Payment.find()
+      .sort({ createdAt: -1 })
+      .limit(100);
+    res.json(payments);
+  } catch (err) {
+    console.error("❌ Error fetching payments:", err.message);
+    res.status(500).json({ error: "Failed to fetch payments" });
+  }
+});
+
+// --- 4️Get Single Payment by ID (Admin Only) ---
+router.get("/:id", protect, adminOnly, async (req, res) => {
+  try {
+    const payment = await Payment.findById(req.params.id);
+    if (!payment) return res.status(404).json({ error: "Payment not found" });
+    res.json(payment);
+  } catch (err) {
+    console.error("❌ Error fetching payment:", err.message);
+    res.status(500).json({ error: "Failed to fetch payment" });
+  }
+});
+
+export default router;
+
+
+backend/controllers/mpesaController.js
+import axios from "axios";
+import Payment from "../models/paymentModel.js";
+import logger from "../utils/logger.js";
+import { getAccessToken, formatPhoneNumber } from "../utils/mpesa.js";
+
+const {
+  CONSUMER_KEY,
+  CONSUMER_SECRET,
+  PASSKEY,
+  SHORTCODE = "174379",
+  NGROK_URL,
+  NODE_ENV,
+} = process.env;
+
+const baseURL =
+  NODE_ENV === "production"
+    ? "https://api.safaricom.co.ke"
+    : "https://sandbox.safaricom.co.ke";
+
+const callbackURL = `${NGROK_URL}/api/mpesa/callback`;
+
+/**
+ * @desc  Initiate STK Push Payment
+ * @route POST /api/mpesa/stkpush
+ */
+export const stkPush = async (req, res) => {
+  try {
+    const { phone, amount } = req.body;
+
+    if (!phone || !amount) {
+      return res.status(400).json({ error: "Phone and amount are required" });
+    }
+
+    const token = await getAccessToken(CONSUMER_KEY, CONSUMER_SECRET, baseURL);
+
+    const timestamp = new Date()
+      .toLocaleString("sv-SE", { timeZone: "Africa/Nairobi" })
+      .replace(/\D/g, "");
+
+    const password = Buffer.from(`${SHORTCODE}${PASSKEY}${timestamp}`).toString("base64");
+
+    const payload = {
+      BusinessShortCode: SHORTCODE,
+      Password: password,
+      Timestamp: timestamp,
+      TransactionType: "CustomerPayBillOnline",
+      Amount: amount,
+      PartyA: formatPhoneNumber(phone),
+      PartyB: SHORTCODE,
+      PhoneNumber: formatPhoneNumber(phone),
+      CallBackURL: callbackURL,
+      AccountReference: "TechieTown",
+      TransactionDesc: "Payment for TechieTown Order",
+    };
+
+    const { data } = await axios.post(
+      `${baseURL}/mpesa/stkpush/v1/processrequest`,
+      payload,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+
+    // Store initial request in DB
+    await Payment.create({
+      phone: formatPhoneNumber(phone),
+      amount,
+      CheckoutRequestID: data.CheckoutRequestID,
+      MerchantRequestID: data.MerchantRequestID,
+      status: "Pending",
+      rawResponse: data,
+    });
+
+    logger.info(`✅ STK Push initiated for ${phone}: ${JSON.stringify(data)}`);
+    res.json({ success: true, message: "STK Push initiated", data });
+  } catch (err) {
+    const details = err.response?.data || err.message;
+    logger.error(`❌ STK Push Error: ${JSON.stringify(details)}`);
+    res.status(500).json({ error: "Failed to initiate payment", details });
+  }
+};
+
+/**
+ * @desc  Handle M-PESA Callback
+ * @route POST /api/mpesa/callback
+ */
+export const mpesaCallback = async (req, res) => {
+  try {
+    const callback = req.body.Body?.stkCallback;
+    if (!callback) {
+      logger.warn("⚠️ Empty M-PESA callback received");
+      return res.status(400).json({ message: "Invalid callback format" });
+    }
+
+    const { ResultCode, ResultDesc, CheckoutRequestID, CallbackMetadata } = callback;
+
+    const payment = await Payment.findOneAndUpdate(
+      { CheckoutRequestID },
+      {
+        status: ResultCode === 0 ? "Success" : "Failed",
+        ResultCode,
+        ResultDesc,
+        metadata: CallbackMetadata?.Item || [],
+      },
+      { new: true }
+    );
+
+    if (!payment) {
+      logger.warn(`⚠️ No payment found for CheckoutRequestID: ${CheckoutRequestID}`);
+    } else {
+      logger.info(`📩 Callback processed: ${ResultDesc}`);
+    }
+
+    res.json({ message: "Callback received successfully" });
+  } catch (err) {
+    logger.error(`❌ Callback processing error: ${err.message}`);
+    res.status(500).json({ error: "Failed to process callback" });
+  }
+};
+
+
+
+backend/utils/mpesa.js
+import axios from "axios";
+
+/**
+ * ✅ Formats a phone number into the required Safaricom format: 2547XXXXXXXX
+ * Accepts numbers like:
+ *  - 07XXXXXXXX
+ *  - 7XXXXXXXX
+ *  - 2547XXXXXXXX
+ *  - +2547XXXXXXXX
+ */
+export function formatPhoneNumber(phone) {
+  if (!phone) throw new Error("Phone number is required");
+
+  let formatted = phone.toString().trim().replace(/\s+/g, "");
+
+  // Remove '+' if present
+  if (formatted.startsWith("+")) {
+    formatted = formatted.slice(1);
+  }
+
+  // If number starts with 07..., replace with 2547...
+  if (formatted.startsWith("07")) {
+    formatted = "254" + formatted.substring(1);
+  }
+
+  // If number starts with just 7..., prepend 254
+  if (formatted.startsWith("7")) {
+    formatted = "254" + formatted;
+  }
+
+  // Ensure 254 prefix
+  if (!formatted.startsWith("254")) {
+    throw new Error(`Invalid phone format: ${phone}`);
+  }
+
+  return formatted;
+}
+
+/**
+ * ✅ Fetches M-Pesa access token
+ */
+export async function getAccessToken(CONSUMER_KEY, CONSUMER_SECRET, baseURL) {
+  try {
+    const auth = Buffer.from(`${CONSUMER_KEY}:${CONSUMER_SECRET}`).toString("base64");
+
+    const { data } = await axios.get(
+      `${baseURL}/oauth/v1/generate?grant_type=client_credentials`,
+      {
+        headers: { Authorization: `Basic ${auth}` },
+      }
+    );
+
+    if (!data.access_token) throw new Error("No access token received from M-Pesa");
+
+    return data.access_token;
+  } catch (err) {
+    console.error("❌ Access Token Error:", err.response?.data || err.message);
+    throw new Error("Failed to get M-Pesa access token");
+  }
+}
+
+
+.env
+# ---------- App Configuration ----------
+PORT=3000
+NODE_ENV=development
+
+# ---------- MongoDB ----------
+MONGODB_URI=mongodb://localhost:27017/TechieTown
+
+# ---------- JWT Secret ----------
+JWT_SECRET=your_secure_random_jwt_secret_here
+
+# ---------- M-Pesa API ----------
+CONSUMER_KEY=
+CONSUMER_SECRET=
+SHORTCODE=174379
+PASSKEY=bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919
+
+# ---------- Ngrok + Frontend ----------
+NGROK_URL=https://annelle-climatic-antwan.ngrok-free.dev
+
+CALLBACK_URL=https://annelle-climatic-antwan.ngrok-free.dev/api/payments/callback
+FRONTEND_URL=*
+
+
+
+
+frontend/public/js/adminlogin.js
+let API_BASE_URL = null;
+
+document.addEventListener("DOMContentLoaded", async () => {
+  const loginForm = document.getElementById("loginForm");
+  const loginBtn = document.getElementById("loginBtn");
+  const message = document.getElementById("message");
+
+  if (!loginForm || !loginBtn) return;
+
+  // === STEP 1: Fetch backend base URL dynamically ===
+  try {
+    // If frontend served via backend (localhost/ngrok)
+    const res = await fetch("/api/config");
+    const data = await res.json();
+
+    // Fallbacks for local or file://
+    API_BASE_URL =
+      data.baseUrl ||
+      window.location.origin ||
+      "http://localhost:3000";
+
+    console.log("✅ Backend Base URL:", API_BASE_URL);
+  } catch (err) {
+    // Fallback for file:// or offline mode
+    console.warn("⚠️ Failed to fetch backend config, using localhost fallback:", err);
+    API_BASE_URL = "http://localhost:3000";
+  }
+
+  // === Helper: Decode JWT ===
+  function parseJwt(token) {
+    try {
+      const base64Url = token.split(".")[1];
+      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split("")
+          .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+          .join("")
+      );
+      return JSON.parse(jsonPayload);
+    } catch {
+      return null;
+    }
+  }
+
+  // === STEP 2: If already logged in, redirect to dashboard ===
+  const existingToken = localStorage.getItem("adminToken");
+  const existingUser = JSON.parse(localStorage.getItem("adminUser") || "{}");
+
+  if (existingToken && existingUser.role === "admin") {
+    console.log("🔁 Already logged in. Redirecting to dashboard...");
+    window.location.href = "/admin/a.dashboard.html";
+    return;
+  }
+
+  // === STEP 3: Handle Login ===
+  loginForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+
+    message.textContent = "";
+    message.className = "";
+
+    if (!email || !password) {
+      message.textContent = "Please enter both email and password.";
+      message.className = "error";
+      return;
+    }
+
+    if (!navigator.onLine) {
+      message.textContent = "You are offline. Check your internet connection.";
+      message.className = "error";
+      return;
+    }
+
+    loginBtn.disabled = true;
+    loginBtn.textContent = "Logging in...";
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/users/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      let data;
+      try {
+        data = await res.json();
+      } catch {
+        throw new Error("Invalid response format (not JSON)");
+      }
+
+      if (!res.ok) {
+        message.textContent =
+          data.error || data.message || "Invalid login credentials.";
+        message.className = "error";
+        return;
+      }
+
+      const { token, user } = data;
+      const decoded = parseJwt(token);
+
+      if (!decoded || decoded.role !== "admin" || !user || user.role !== "admin") {
+        message.textContent = "Access denied: Admins only.";
+        message.className = "error";
+        return;
+      }
+
+      // ✅ Store token & user info
+      localStorage.setItem("adminToken", token);
+      localStorage.setItem("adminUser", JSON.stringify(user));
+      console.log("💾 Token stored:", token);
+      console.log("💾 User stored:", user);
+
+      message.textContent = "Login successful! Redirecting...";
+      message.className = "success";
+
+      setTimeout(() => {
+        window.location.href = "/admin/a.dashboard.html";
+      }, 1000);
+    } catch (err) {
+      console.error("❌ Login Error:", err);
+      message.textContent = "Server error. Please try again later.";
+      message.className = "error";
+    } finally {
+      loginBtn.disabled = false;
+      loginBtn.textContent = "Login";
+    }
+  });
+});
+
+
+
+
+frontend/public/js/adminCheck.js
+// ✅ public/js/adminCheck.js
+document.addEventListener("DOMContentLoaded", async () => {
+  const token = localStorage.getItem("adminToken");
+  const user = JSON.parse(localStorage.getItem("adminUser") || "{}");
+  const messageArea = document.getElementById("adminMessage");
+
+  // STEP 1: If no token, redirect immediately
+  if (!token || !user || user.role !== "admin") {
+    console.warn("🚪 No valid admin token found. Redirecting to login...");
+    window.location.href = "/a.login.html";
+    return;
+  }
+
+  // STEP 2: Determine backend URL dynamically
+  let API_BASE_URL = null;
+  try {
+    const res = await fetch("/api/config");
+    const data = await res.json();
+    API_BASE_URL =
+      data.baseUrl || window.location.origin || "http://localhost:3000";
+  } catch (err) {
+    console.warn("⚠️ Failed to fetch backend config, using localhost fallback.");
+    API_BASE_URL = "http://localhost:3000";
+  }
+
+  // STEP 3: Verify token validity with backend
+  try {
+    const verifyRes = await fetch(`${API_BASE_URL}/api/verify-token`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    const data = await verifyRes.json();
+
+    if (!verifyRes.ok || !data.valid) {
+      console.warn("❌ Token verification failed:", data.message);
+      throw new Error(data.message || "Token invalid");
+    }
+
+    console.log("✅ Token verified for:", data.user);
+
+    // Optional: Show admin name in dashboard
+    const adminNameEl = document.getElementById("adminName");
+    if (adminNameEl && user?.name) {
+      adminNameEl.textContent = user.name;
+    }
+
+  } catch (err) {
+    console.error("🔒 Admin check failed:", err.message);
+    localStorage.removeItem("adminToken");
+    localStorage.removeItem("adminUser");
+
+    if (messageArea) {
+      messageArea.textContent = "Session expired. Please log in again.";
+      messageArea.className = "error";
+    }
+
+    setTimeout(() => {
+      window.location.href = "/a.login.html";
+    }, 800);
+  }
+});
+
+models/
+
+userModel.js
+import mongoose from "mongoose";
+import bcrypt from "bcrypt";
+
+const userSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    role: {
+      type: String,
+      enum: ["customer", "admin"],
+      default: "customer",
+    },
+    addresses: [
+      {
+        label: String,
+        street: String,
+        city: String,
+        postalCode: String,
+        country: String,
+      },
+    ],
+  },
+  { timestamps: true }
+);
+
+// 🔐 Automatically hash password before save
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+
+  try {
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
+
+// 🔐 Compare password method
+userSchema.methods.matchPassword = async function (enteredPassword) {
+  return bcrypt.compare(enteredPassword, this.password);
+};
+
+const User = mongoose.model("User", userSchema);
+export default User;
+
+
+
+
+paymentModel.js
+import mongoose from "mongoose";
+
+const paymentSchema = new mongoose.Schema(
+  {
+    orderId: { type: mongoose.Schema.Types.ObjectId, ref: "Order", required: false },
+    phone: { type: String, required: true },
+    amount: { type: Number, required: true },
+    merchantRequestId: { type: String },
+    checkoutRequestId: { type: String },
+    resultCode: { type: Number },
+    resultDesc: { type: String },
+    mpesaReceiptNumber: { type: String },
+    transactionDate: { type: String },
+    callbackData: { type: Object },
+    status: {
+      type: String,
+      enum: ["initiated", "success", "failed", "pending"],
+      default: "initiated",
+    },
+  },
+  { timestamps: true }
+);
+
+const Payment = mongoose.models.Payment || mongoose.model("Payment", paymentSchema);
+
+export default Payment;
+
+
+orderModel.js
+import mongoose from "mongoose";
+
+const orderSchema = new mongoose.Schema(
+  {
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+    products: [
+      {
+        product: { type: mongoose.Schema.Types.ObjectId, ref: "Product", required: true },
+        quantity: { type: Number, required: true },
+      },
+    ],
+    totalAmount: { type: Number, required: true },
+    paymentStatus: { type: String, default: "Pending" },
+  },
+  {
+    timestamps: true, // adds createdAt and updatedAt fields automatically
+  }
+);
+
+const Order = mongoose.models.Order || mongoose.model("Order", orderSchema);
+
+export default Order;
+
+
+
+productModel.js
+import mongoose from "mongoose";
+
+const productSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  image: { type: String },
+  price: { type: Number, required: true },
+  brand: { type: String },
+  category: { type: String },
+  stock: { type: Number, default: 0 },
+  description: { type: String },
+  createdAt: { type: Date, default: Date.now }
+});
+
+const Product = mongoose.models.Product || mongoose.model("Product", productSchema);
+
+export default Product;
+
+
+
+utils/fileHelper.js
+// utils/fileHelper.js
+import fs from "fs/promises";
+import path from "path";
+
+export async function appendToJSONFile(filePath, data) {
+  try {
+    const dir = path.dirname(filePath);
+    await fs.mkdir(dir, { recursive: true });
+
+    let existing = [];
+    try {
+      const fileContent = await fs.readFile(filePath, "utf8");
+      existing = JSON.parse(fileContent || "[]");
+    } catch (err) {
+      if (err.code !== "ENOENT") throw err;
+    }
+
+    existing.push(data);
+    await fs.writeFile(filePath, JSON.stringify(existing, null, 2), "utf8");
+  } catch (err) {
+    throw new Error("File write error: " + err.message);
+  }
+}
+
+
+
+utils/validation.js (for the Joi schema you use for STK validation)
+import Joi from "joi";
+
+export const stkPushSchema = Joi.object({
+  phone: Joi.string()
+    .pattern(/^(\+?254|0)?7\d{8}$/)
+    .required()
+    .messages({
+      "string.pattern.base": "Phone number must be a valid Kenyan mobile number",
+      "string.empty": "Phone number is required",
+    }),
+  amount: Joi.number().integer().min(1).required().messages({
+    "number.base": "Amount must be a number",
+    "number.min": "Amount must be greater than zero",
+  }),
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+server.js
+// server.js
+import dotenv from "dotenv";
+import express from "express";
+import axios from "axios";
+import cors from "cors";
+import mongoose from "mongoose";
+import bcrypt from "bcrypt";
+import helmet from "helmet";
+import rateLimit from "express-rate-limit";
+import path from "path";
+import { fileURLToPath } from "url";
+import morgan from "morgan";
+import jwt from "jsonwebtoken";
+import fs from "fs";
+
+import logger from "./utils/logger.js";
+import { formatPhoneNumber, getAccessToken } from "./utils/mpesa.js";
+import { appendToJSONFile } from "./utils/fileHelper.js";
+import { stkPushSchema } from "./utils/validation.js";
+
+import User from "./models/userModel.js";
+import Product from "./models/productModel.js";
+import Order from "./models/orderModel.js";
+import Payment from "./models/paymentModel.js";
+
+import adminRoutes from "./routes/admin.js";
+import paymentRoute from "./routes/paymentRoute.js";
+import orderRoute from "./routes/orderRoute.js";
+import userRoute from "./routes/userRoute.js";
+import refundRoute from "./routes/refundRoute.js";
+import shippingRoute from "./routes/shippingRoute.js";
+import productRoute from "./routes/productRoute.js";
+
+import { protect, adminOnly } from "./middleware/authMiddleware.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// === Load environment ===
+dotenv.config();
+
+const {
+  MONGODB_URI,
+  CONSUMER_KEY,
+  CONSUMER_SECRET,
+  PASSKEY,
+  SHORTCODE = "174379",
+  NGROK_URL,
+  NODE_ENV,
+  PORT = 3000,
+  FRONTEND_URL,
+  JWT_SECRET,
+} = process.env;
+
+// === Safety Checks ===
+if (!MONGODB_URI) throw new Error("❌ MONGODB_URI missing in .env");
+if (!CONSUMER_KEY || !CONSUMER_SECRET || !PASSKEY)
+  throw new Error("❌ M-PESA credentials missing in .env");
+if (!JWT_SECRET) throw new Error("❌ JWT_SECRET missing in .env");
+
+const baseURL =
+  NODE_ENV === "production"
+    ? "https://api.safaricom.co.ke"
+    : "https://sandbox.safaricom.co.ke";
+
+// === Logs Directory + Callback File ===
+const logsDir = path.join(__dirname, "logs");
+if (!fs.existsSync(logsDir)) fs.mkdirSync(logsDir);
+
+const CALLBACK_FILE = path.join(logsDir, "mpesa-callbacks.json");
+
+// === Express setup ===
+const app = express();
+app.set("trust proxy", 1);
+app.disable("x-powered-by");
+
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+  })
+);
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (
+        !origin ||
+        origin === FRONTEND_URL ||
+        FRONTEND_URL === "*" ||
+        /ngrok-free\.dev$/.test(origin)
+      ) {
+        callback(null, true);
+      } else {
+        console.warn(`❌ Blocked CORS request from: ${origin}`);
+        callback(new Error("CORS not allowed from this origin"));
+      }
+    },
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 200 }));
+
+app.use("/uploads", express.static("uploads"));
+app.use(express.static(path.join(__dirname, "../public")));
+app.use("/admin", express.static(path.join(__dirname, "../public/admin")));
+
+app.use(
+  morgan("combined", {
+    stream: { write: (msg) => logger.info(msg.trim()) },
+  })
+);
+
+// === Utils ===
+app.get("/api/ping", (req, res) => {
+  res.json({ status: "ok", message: "Backend is live ✅" });
+});
+
+app.get("/api/config", (req, res) => {
+  res.json({
+    baseUrl: process.env.NGROK_URL || `${req.protocol}://${req.get("host")}`,
+  });
+});
+
+// === Database Connection ===
+async function connectToMongo() {
+  try {
+    await mongoose.connect(MONGODB_URI);
+    logger.info("✅ Connected to MongoDB");
+  } catch (err) {
+    logger.error("❌ MongoDB Error: " + err.message);
+    process.exit(1);
+  }
+}
+
+// === Default Admin Seed ===
+async function createDefaultAdmin() {
+  try {
+    const existingAdmin = await User.findOne({ role: "admin" });
+    if (!existingAdmin) {
+      const hash = await bcrypt.hash("admin123", 10);
+      await User.create({
+        name: "TechieTown Admin",
+        email: "admin@techietown.com",
+        password: hash,
+        role: "admin",
+      });
+      logger.info("👑 Admin created: admin@techietown.com / admin123");
+    }
+  } catch (err) {
+    logger.error("❌ Failed to create admin: " + err.message);
+  }
+}
+
+// === 🔥 STK PUSH ROUTE ===
+app.post("/api/payments/stkpush", async (req, res) => {
+  const { error, value } = stkPushSchema.validate(req.body);
+  if (error) {
+    return res.status(400).json({
+      success: false,
+      message: error.details[0].message,
+    });
+  }
+
+  const { phone, amount } = value;
+
+  try {
+    const token = await getAccessToken(CONSUMER_KEY, CONSUMER_SECRET, baseURL);
+
+    const timestamp = new Date()
+      .toLocaleString("sv-SE", { timeZone: "Africa/Nairobi" })
+      .replace(/\D/g, "");
+
+    const password = Buffer.from(`${SHORTCODE}${PASSKEY}${timestamp}`).toString("base64");
+
+    const formattedPhone = formatPhoneNumber(phone);
+
+    const payload = {
+      BusinessShortCode: SHORTCODE,
+      Password: password,
+      Timestamp: timestamp,
+      TransactionType: "CustomerPayBillOnline",
+      Amount: amount,
+      PartyA: formattedPhone,
+      PartyB: SHORTCODE,
+      PhoneNumber: formattedPhone,
+      CallBackURL: `${NGROK_URL}/api/payments/stkpush/callback`,
+      AccountReference: "TechieTown",
+      TransactionDesc: "Payment for TechieTown Order",
+    };
+
+    const { data } = await axios.post(
+      `${baseURL}/mpesa/stkpush/v1/processrequest`,
+      payload,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+
+    logger.info("✅ STK Push API Response: " + JSON.stringify(data, null, 2));
+
+    if (data.ResponseCode === "0") {
+      return res.json({
+        success: true,
+        message: "STK Push request accepted. Check your phone!",
+        data,
+      });
+    } else {
+      return res.status(400).json({
+        success: false,
+        message: data.errorMessage || "M-Pesa rejected request",
+        data,
+      });
+    }
+  } catch (err) {
+    const details = err.response?.data || err.message;
+    logger.error("❌ STK Push Error: " + JSON.stringify(details, null, 2));
+
+    res.status(500).json({
+      success: false,
+      message: "Failed to initiate payment",
+      details,
+    });
+  }
+});
+
+// === ✅ Unified M-Pesa Callback Route ===
+app.post("/api/payments/stkpush/callback", async (req, res) => {
+  try {
+    const callbackData = req.body;
+    logger.info("📩 M-Pesa Callback Received: " + JSON.stringify(callbackData, null, 2));
+    await appendToJSONFile(CALLBACK_FILE, callbackData);
+    res.status(200).json({ success: true, message: "Callback received successfully" });
+  } catch (err) {
+    logger.error("❌ Callback Error: " + err.message);
+    res.status(500).json({ success: false, message: "Failed to store callback" });
+  }
+});
+
+// === 🧾 View Saved M-Pesa Callbacks (for debugging) ===
+app.get("/api/payments/callbacks", async (req, res) => {
+  try {
+    if (!fs.existsSync(CALLBACK_FILE)) {
+      return res.status(200).json({ success: true, data: [], message: "No callbacks yet" });
+    }
+
+    const fileContent = fs.readFileSync(CALLBACK_FILE, "utf-8");
+    const data = JSON.parse(fileContent || "[]");
+
+    res.status(200).json({
+      success: true,
+      count: data.length,
+      data,
+    });
+  } catch (err) {
+    logger.error("❌ Failed to read callback file: " + err.message);
+    res.status(500).json({
+      success: false,
+      message: "Failed to read callback data",
+    });
+  }
+});
+
+
+// === Protected API Routes ===
+app.use("/api/users", userRoute);
+app.use("/api/admin", protect, adminOnly, adminRoutes);
+app.use("/api/payments", protect, paymentRoute);
+app.use("/api/products", protect, productRoute);
+app.use("/api/orders", protect, orderRoute);
+app.use("/api/refunds", protect, refundRoute);
+app.use("/api/shipping", protect, shippingRoute);
+
+// === Dashboard ===
+app.get("/api/admin/dashboard", protect, adminOnly, async (req, res) => {
+  try {
+    const [products, orders, payments] = await Promise.all([
+      Product.countDocuments(),
+      Order.countDocuments(),
+      Payment.countDocuments(),
+    ]);
+
+    const recentOrders = await Order.find()
+      .sort({ createdAt: -1 })
+      .limit(5)
+      .select("_id customer amount status createdAt");
+
+    res.json({ products, orders, payments, recentOrders });
+  } catch (err) {
+    logger.error("❌ Dashboard Error: " + err.message);
+    res.status(500).json({ message: "Dashboard failed" });
+  }
+});
+
+// === Global Error Handler ===
+app.use((err, req, res, next) => {
+  logger.error("🔥 Error: " + err.stack);
+  res.status(500).json({ error: "Internal server error" });
+});
+
+// === Start Server ===
+async function main() {
+  await connectToMongo();
+  await createDefaultAdmin();
+
+  const server = app.listen(PORT, () => {
+    logger.info(`🚀 Server running on http://localhost:${PORT}`);
+    logger.info(`📁 M-Pesa callbacks will be saved to: ${CALLBACK_FILE}`);
+  });
+
+  const shutdown = () => {
+    logger.info("👋 Gracefully shutting down...");
+    server.close(() => {
+      mongoose.connection.close(false, () => {
+        logger.info("🛑 MongoDB disconnected.");
+        process.exit(0);
+      });
+    });
+  };
+
+  process.on("SIGINT", shutdown);
+  process.on("SIGTERM", shutdown);
+}
+
+main().catch((err) => {
+  logger.error("❌ Startup Error: " + err.message);
+  process.exit(1);
+});
+
+
+controllers/mpesaController.js
+import axios from "axios";
+import Payment from "../models/paymentModel.js";
+import logger from "../utils/logger.js";
+import { getAccessToken, formatPhoneNumber } from "../utils/mpesa.js";
+
+const {
+  CONSUMER_KEY,
+  CONSUMER_SECRET,
+  PASSKEY,
+  SHORTCODE = "174379",
+  NGROK_URL,
+  NODE_ENV,
+} = process.env;
+
+const baseURL =
+  NODE_ENV === "production"
+    ? "https://api.safaricom.co.ke"
+    : "https://sandbox.safaricom.co.ke";
+
+const callbackURL = `${NGROK_URL}/api/mpesa/callback`;
+
+/**
+ * @desc  Initiate STK Push Payment
+ * @route POST /api/mpesa/stkpush
+ */
+export const stkPush = async (req, res) => {
+  try {
+    const { phone, amount } = req.body;
+
+    if (!phone || !amount) {
+      return res.status(400).json({ error: "Phone and amount are required" });
+    }
+
+    const token = await getAccessToken(CONSUMER_KEY, CONSUMER_SECRET, baseURL);
+
+    const timestamp = new Date()
+      .toLocaleString("sv-SE", { timeZone: "Africa/Nairobi" })
+      .replace(/\D/g, "");
+
+    const password = Buffer.from(`${SHORTCODE}${PASSKEY}${timestamp}`).toString("base64");
+
+    const payload = {
+      BusinessShortCode: SHORTCODE,
+      Password: password,
+      Timestamp: timestamp,
+      TransactionType: "CustomerPayBillOnline",
+      Amount: amount,
+      PartyA: formatPhoneNumber(phone),
+      PartyB: SHORTCODE,
+      PhoneNumber: formatPhoneNumber(phone),
+      CallBackURL: callbackURL,
+      AccountReference: "TechieTown",
+      TransactionDesc: "Payment for TechieTown Order",
+    };
+
+    const { data } = await axios.post(
+      `${baseURL}/mpesa/stkpush/v1/processrequest`,
+      payload,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+
+    // Store initial request in DB
+    await Payment.create({
+      phone: formatPhoneNumber(phone),
+      amount,
+      CheckoutRequestID: data.CheckoutRequestID,
+      MerchantRequestID: data.MerchantRequestID,
+      status: "Pending",
+      rawResponse: data,
+    });
+
+    logger.info(`✅ STK Push initiated for ${phone}: ${JSON.stringify(data)}`);
+    res.json({ success: true, message: "STK Push initiated", data });
+  } catch (err) {
+    const details = err.response?.data || err.message;
+    logger.error(`❌ STK Push Error: ${JSON.stringify(details)}`);
+    res.status(500).json({ error: "Failed to initiate payment", details });
+  }
+};
+
+/**
+ * @desc  Handle M-PESA Callback
+ * @route POST /api/mpesa/callback
+ */
+export const mpesaCallback = async (req, res) => {
+  try {
+    const callback = req.body.Body?.stkCallback;
+    if (!callback) {
+      logger.warn("⚠️ Empty M-PESA callback received");
+      return res.status(400).json({ message: "Invalid callback format" });
+    }
+
+    const { ResultCode, ResultDesc, CheckoutRequestID, CallbackMetadata } = callback;
+
+    const payment = await Payment.findOneAndUpdate(
+      { CheckoutRequestID },
+      {
+        status: ResultCode === 0 ? "Success" : "Failed",
+        ResultCode,
+        ResultDesc,
+        metadata: CallbackMetadata?.Item || [],
+      },
+      { new: true }
+    );
+
+    if (!payment) {
+      logger.warn(`⚠️ No payment found for CheckoutRequestID: ${CheckoutRequestID}`);
+    } else {
+      logger.info(`📩 Callback processed: ${ResultDesc}`);
+    }
+
+    res.json({ message: "Callback received successfully" });
+  } catch (err) {
+    logger.error(`❌ Callback processing error: ${err.message}`);
+    res.status(500).json({ error: "Failed to process callback" });
+  }
+};
+
+
+routes/paymentRoute.js
+import express from "express";
+import { stkPush, mpesaCallback } from "../controllers/mpesaController.js";
+
+const router = express.Router();
+
+router.post("/stkpush", stkPush);
+router.post("/callback", mpesaCallback);
+router.post("/verifyAdmin", verifyAdmin);
+
+export default router;
+
+
+
+controllers/userController.js
+import User from "../models/userModel.js";
+import asyncHandler from "express-async-handler";
+import jwt from "jsonwebtoken";
+
+// Generate JWT with id and role
+const generateToken = (user) => {
+  return jwt.sign(
+    { id: user._id, role: user.role },
+    process.env.JWT_SECRET,
+    { expiresIn: "7d" }
+  );
+};
+
+// @desc Auth user & get token
+// @route POST /api/users/login
+// @access Public
+export const authUser = asyncHandler(async (req, res) => {
+  const { email, password } = req.body;
+
+  const user = await User.findOne({ email });
+  if (!user) {
+    res.status(401);
+    throw new Error("Invalid email or password");
+  }
+
+  const isMatch = await user.matchPassword(password);
+  if (!isMatch) {
+    res.status(401);
+    throw new Error("Invalid email or password");
+  }
+
+  // Return token + user info including role
+  res.json({
+    user: {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    },
+    token: generateToken(user),
+  });
+});
+
+
+
+public/js/adminlogin.js
+let API_BASE_URL = null;
+
+document.addEventListener("DOMContentLoaded", async () => {
+  const loginForm = document.getElementById("loginForm");
+  const loginBtn = document.getElementById("loginBtn");
+  const message = document.getElementById("message");
+
+  if (!loginForm || !loginBtn) return;
+
+  // === STEP 1: Fetch backend base URL dynamically ===
+  try {
+    // If frontend served via backend (localhost/ngrok)
+    const res = await fetch("/api/config");
+    const data = await res.json();
+
+    // Fallbacks for local or file://
+    API_BASE_URL =
+      data.baseUrl ||
+      window.location.origin ||
+      "http://localhost:3000";
+
+    console.log("✅ Backend Base URL:", API_BASE_URL);
+  } catch (err) {
+    // Fallback for file:// or offline mode
+    console.warn("⚠️ Failed to fetch backend config, using localhost fallback:", err);
+    API_BASE_URL = "http://localhost:3000";
+  }
+
+  // === Helper: Decode JWT ===
+  function parseJwt(token) {
+    try {
+      const base64Url = token.split(".")[1];
+      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split("")
+          .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+          .join("")
+      );
+      return JSON.parse(jsonPayload);
+    } catch {
+      return null;
+    }
+  }
+
+  // === STEP 2: If already logged in, redirect to dashboard ===
+  const existingToken = localStorage.getItem("adminToken");
+  const existingUser = JSON.parse(localStorage.getItem("adminUser") || "{}");
+
+  if (existingToken && existingUser.role === "admin") {
+    console.log("🔁 Already logged in. Redirecting to dashboard...");
+    window.location.href = "/admin/a.dashboard.html";
+    return;
+  }
+
+  // === STEP 3: Handle Login ===
+  loginForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+
+    message.textContent = "";
+    message.className = "";
+
+    if (!email || !password) {
+      message.textContent = "Please enter both email and password.";
+      message.className = "error";
+      return;
+    }
+
+    if (!navigator.onLine) {
+      message.textContent = "You are offline. Check your internet connection.";
+      message.className = "error";
+      return;
+    }
+
+    loginBtn.disabled = true;
+    loginBtn.textContent = "Logging in...";
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/users/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      let data;
+      try {
+        data = await res.json();
+      } catch {
+        throw new Error("Invalid response format (not JSON)");
+      }
+
+      if (!res.ok) {
+        message.textContent =
+          data.error || data.message || "Invalid login credentials.";
+        message.className = "error";
+        return;
+      }
+
+      const { token, user } = data;
+      const decoded = parseJwt(token);
+
+      if (!decoded || decoded.role !== "admin" || !user || user.role !== "admin") {
+        message.textContent = "Access denied: Admins only.";
+        message.className = "error";
+        return;
+      }
+
+      // ✅ Store token & user info
+      localStorage.setItem("adminToken", token);
+      localStorage.setItem("adminUser", JSON.stringify(user));
+      console.log("💾 Token stored:", token);
+      console.log("💾 User stored:", user);
+
+      message.textContent = "Login successful! Redirecting...";
+      message.className = "success";
+
+      setTimeout(() => {
+        window.location.href = "/admin/a.dashboard.html";
+      }, 1000);
+    } catch (err) {
+      console.error("❌ Login Error:", err);
+      message.textContent = "Server error. Please try again later.";
+      message.className = "error";
+    } finally {
+      loginBtn.disabled = false;
+      loginBtn.textContent = "Login";
+    }
+  });
+});
+
+
+
+public/js/adminCheck.js
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Perfect — thanks for sharing the full TechieTown structure. That actually makes placing the /api/payments/stkpush endpoint very clear. Here’s exactly where everything goes and how it should be organized:
+
+1️⃣ Place the STK push route
+
+You already have a routes folder:
+
+backend/routes/
+├─ paymentRoute.js      (existing)
+├─ mpesaRoute.js        (existing)
+
+
+Option A (cleanest):
+
+Put the STK push endpoint in mpesaRoute.js because it’s specifically M-Pesa logic.
+
+Or, if you want to keep M-Pesa routes separate from other payments, create stkpushRoute.js, but it’s fine inside mpesaRoute.js.
+
+2️⃣ Place the logic for STK push
+
+You have a utils folder:
+
+backend/utils/
+├─ mpesa.js
+
+
+✅ Ideal: Put the functions for:
+
+getAccessToken()
+
+sendSTKPush()
+
+getTimestamp()
+
+generatePassword()
+
+inside mpesa.js as reusable functions. Then import them in your route:
+
+import express from 'express';
+import { getAccessToken, sendSTKPush } from '../utils/mpesa.js';
+
+const router = express.Router();
+
+router.post('/stkpush', async (req, res) => {
+    try {
+        const { phone, amount } = req.body;
+        if (!phone || !amount) return res.status(400).json({ error: 'Phone and amount required' });
+
+        const stkRes = await sendSTKPush(phone, amount); // call utility function
+        res.status(200).json(stkRes);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'STK Push failed', details: err.message });
+    }
+});
+
+export default router;
+
+3️⃣ Controller Option (if you prefer MVC)
+
+Since you have controllers/mpesaController.js, you could move the actual route logic there:
+
+// mpesaController.js
+export async function stkPushController(req, res) {
+    try {
+        const { phone, amount } = req.body;
+        const stkRes = await sendSTKPush(phone, amount);
+        res.status(200).json(stkRes);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+
+
+Then your route is just:
+
+import express from 'express';
+import { stkPushController } from '../controllers/mpesaController.js';
+
+const router = express.Router();
+router.post('/stkpush', stkPushController);
+export default router;
+
+
+This keeps routes clean and logic in the controller.
+
+4️⃣ Server.js setup
+
+In backend/server.js, make sure you have:
+
+import express from 'express';
+import dotenv from 'dotenv';
+import mpesaRoutes from './routes/mpesaRoute.js';
+
+dotenv.config();
+const app = express();
+app.use(express.json());
+
+// Add M-Pesa routes
+app.use('/api/payments', mpesaRoutes);
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+✅ Summary of File Placement
+Purpose	File/Folder
+Route for STK Push	backend/routes/mpesaRoute.js
+Logic / utils for M-Pesa	backend/utils/mpesa.js
+Controller (optional)	backend/controllers/mpesaController.js
+Environment variables	backend/.env
+Server entry	backend/server.js

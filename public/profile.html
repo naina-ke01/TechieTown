@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TechieTown - User Profile</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #111;
+      color: #fff;
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+
+    h2 {
+      color: #d4af37;
+      margin-bottom: 20px;
+    }
+
+    form {
+      background: #222;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 6px;
+      border: none;
+    }
+
+    button {
+      background: #d4af37;
+      border: none;
+      padding: 12px 20px;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 6px;
+      color: #111;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background: #c19e34;
+    }
+
+    ul.address-list {
+      list-style: none;
+      padding: 0;
+    }
+    ul.address-list li {
+      background: #1a1a1a;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="overlay" class="overlay"></div>
+
+  <h2>Your Saved Addresses</h2>
+  <ul class="address-list" id="addressList">
+    <!-- Address items will be injected here -->
+  </ul>
+
+  <h2>Add New Address</h2>
+  <form id="addressForm">
+    <input type="text" id="label" placeholder="Label (e.g., Home, Work)" required />
+    <input type="text" id="street" placeholder="Street Address" required />
+    <input type="text" id="city" placeholder="City" required />
+    <input type="text" id="postalCode" placeholder="Postal Code" required />
+    <input type="text" id="country" placeholder="Country" required />
+    <button type="submit">Save Address</button>
+  </form>
+
+  <script>
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('Please login first!');
+      window.location.href = '/login.html';
+    }
+
+    async function fetchProfile() {
+      const res = await fetch('/profile', {
+        headers: { 'Authorization': `Bearer ${token}` },
+      });
+      if (res.ok) {
+        const user = await res.json();
+        renderAddresses(user.addresses);
+      } else {
+        alert('Failed to load profile');
+      }
+    }
+
+    function renderAddresses(addresses) {
+      const list = document.getElementById('addressList');
+      list.innerHTML = '';
+      if (addresses.length === 0) {
+        list.innerHTML = '<li>No addresses saved yet.</li>';
+        return;
+      }
+      addresses.forEach(addr => {
+        list.innerHTML += `
+          <li>
+            <strong>${addr.label}</strong><br />
+            ${addr.street}, ${addr.city}<br />
+            ${addr.postalCode}, ${addr.country}
+          </li>`;
+      });
+    }
+
+    document.getElementById('addressForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const label = e.target.label.value.trim();
+      const street = e.target.street.value.trim();
+      const city = e.target.city.value.trim();
+      const postalCode = e.target.postalCode.value.trim();
+      const country = e.target.country.value.trim();
+
+      const res = await fetch('/profile/address', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ label, street, city, postalCode, country }),
+      });
+
+      if (res.ok) {
+        const addresses = await res.json();
+        renderAddresses(addresses);
+        e.target.reset();
+        alert('Address saved successfully!');
+      } else {
+        alert('Failed to save address');
+      }
+    });
+
+    fetchProfile();
+  </script>
+</body>
+</html>

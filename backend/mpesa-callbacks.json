@@ -1,0 +1,32 @@
+[
+  {
+    "Body": {
+      "stkCallback": {
+        "MerchantRequestID": "b2e5-4a5b-b53d-dc73bff5e5d513103",
+        "CheckoutRequestID": "ws_CO_14102025051303236799991551",
+        "ResultCode": 1032,
+        "ResultDesc": "Request Cancelled by user."
+      }
+    }
+  },
+  {
+    "Body": {
+      "stkCallback": {
+        "MerchantRequestID": "9ecf-497b-a4bc-759aa106965e404",
+        "CheckoutRequestID": "ws_CO_14102025100606465799991551",
+        "ResultCode": 1032,
+        "ResultDesc": "Request Cancelled by user."
+      }
+    }
+  },
+  {
+    "Body": {
+      "stkCallback": {
+        "MerchantRequestID": "c812-44a7-ae7b-667256e34d18594",
+        "CheckoutRequestID": "ws_CO_14102025103100573799991551",
+        "ResultCode": 1032,
+        "ResultDesc": "Request Cancelled by user."
+      }
+    }
+  }
+]

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin – Payments | TechieTown</title>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+  />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: #000;
+      color: #fff;
+      display: flex;
+      height: 100vh;
+    }
+    .sidebar {
+      width: 250px;
+      background: linear-gradient(135deg, #111, #222);
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+      box-shadow: 4px 0 15px rgba(212, 175, 55, 0.2);
+    }
+    .sidebar h2 {
+      color: #d4af37;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .sidebar a {
+      text-decoration: none;
+      color: #bbb;
+      padding: 12px 15px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      transition: 0.3s;
+    }
+    .sidebar a:hover,
+    .sidebar a.active {
+      background: #d4af37;
+      color: #111;
+    }
+    .sidebar i {
+      margin-right: 10px;
+    }
+    .main-content {
+      flex: 1;
+      background: #111;
+      padding: 30px;
+      overflow-y: auto;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+    header h1 {
+      color: #d4af37;
+      font-size: 1.5rem;
+    }
+    .refresh-btn {
+      background: #d4af37;
+      color: #000;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      float: right;
+      margin-bottom: 15px;
+      transition: 0.3s;
+    }
+    .refresh-btn:hover {
+      background: #c19e34;
+      transform: scale(1.03);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #111;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    th, td {
+      padding: 12px 10px;
+      text-align: left;
+      border-bottom: 1px solid #333;
+    }
+    th {
+      color: #d4af37;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    tr:hover {
+      background: #1a1a1a;
+    }
+    .status-success {
+      color: #00ff99;
+      font-weight: 500;
+    }
+    .status-failed {
+      color: #ff5555;
+      font-weight: 500;
+    }
+  </style>
+</head>
+
+<body>
+
+  <aside class="sidebar">
+    <h2>Admin Panel</h2>
+    <a href="a.dashboard.html"><i class="fas fa-chart-line"></i> Dashboard</a>
+    <a href="a.products.html"><i class="fas fa-box"></i> Products</a>
+    <a href="a.orders.html"><i class="fas fa-shopping-cart"></i> Orders</a>
+    <a href="a.customers.html"><i class="fas fa-users"></i> Customers</a>
+    <a href="a.payments.html" class="active"><i class="fas fa-money-bill-wave"></i> Payments</a>
+    <a href="a.settings.html"><i class="fas fa-cogs"></i> Settings</a>
+  </aside>
+
+  <main class="main-content">
+    <header>
+      <h1>💳 Payments Panel</h1>
+      <button class="refresh-btn" id="refresh">🔄 Refresh</button>
+    </header>
+
+    <table id="paymentsTable">
+      <thead>
+        <tr>
+          <th>Transaction ID</th>
+          <th>Phone</th>
+          <th>Amount (KES)</th>
+          <th>Date</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td colspan="5" style="text-align:center;">Loading transactions...</td></tr>
+      </tbody>
+    </table>
+  </main>
+
+<script src="../js/admin-dashboard.js" defer></script>
+<script src="/js/adminCheck.js" defer></script>
+
+  <script>
+    const API_BASE = "http://localhost:3000";
+
+    async function loadPayments() {
+      const tableBody = document.querySelector("#paymentsTable tbody");
+      tableBody.innerHTML = "<tr><td colspan='5' style='text-align:center;'>Loading...</td></tr>";
+
+      try {
+        const res = await fetch(`${API_BASE}/api/payments`);
+        const payments = await res.json();
+
+        if (!payments.length) {
+          tableBody.innerHTML = "<tr><td colspan='5' style='text-align:center;'>No transactions found.</td></tr>";
+          return;
+        }
+
+        tableBody.innerHTML = "";
+        payments.forEach(p => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${p.MpesaReceiptNumber || "-"}</td>
+            <td>${p.phone}</td>
+            <td>${p.amount}</td>
+            <td>${new Date(p.date).toLocaleString()}</td>
+            <td class="${p.status === "Success" ? "status-success" : "status-failed"}">${p.status}</td>
+          `;
+          tableBody.appendChild(row);
+        });
+      } catch (err) {
+        console.error("Error fetching payments:", err);
+        tableBody.innerHTML = "<tr><td colspan='5' style='text-align:center;color:red;'>Error loading data</td></tr>";
+      }
+    }
+
+    document.getElementById("refresh").addEventListener("click", loadPayments);
+    loadPayments();
+  </script>
+</body>
+</html>

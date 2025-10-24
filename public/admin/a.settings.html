@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin Settings | TechieTown</title>
+  <link rel="stylesheet" href="../css/admin.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: #000;
+      color: #fff;
+      display: flex;
+      height: 100vh;
+    }
+    .sidebar {
+      width: 250px;
+      background: linear-gradient(135deg, #111, #222);
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+      box-shadow: 4px 0 15px rgba(212, 175, 55, 0.2);
+    }
+    .sidebar h2 {
+      color: #d4af37;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .sidebar a {
+      text-decoration: none;
+      color: #bbb;
+      padding: 12px 15px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      transition: 0.3s;
+    }
+    .sidebar a:hover, .sidebar a.active {
+      background: #d4af37;
+      color: #111;
+    }
+    .sidebar i { margin-right: 10px; }
+
+    .main-content {
+      flex: 1;
+      background: #111;
+      padding: 30px;
+      overflow-y: auto;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+
+    header h1 {
+      color: #d4af37;
+      font-size: 1.5rem;
+    }
+
+    .btn {
+      background: #d4af37;
+      color: #111;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    .btn:hover { background: #c19e34; }
+
+    form {
+      background: #1a1a1a;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 0 15px rgba(212, 175, 55, 0.1);
+      max-width: 500px;
+    }
+
+    form label {
+      display: block;
+      margin-bottom: 5px;
+      color: #d4af37;
+    }
+
+    form input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: none;
+      border-radius: 6px;
+      background: #222;
+      color: #fff;
+    }
+
+    form button {
+      width: 100%;
+      background: #d4af37;
+      color: #111;
+      border: none;
+      padding: 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    form button:hover {
+      background: #c19e34;
+    }
+
+    #statusMsg {
+      margin-top: 10px;
+      text-align: center;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+  <aside class="sidebar">
+    <h2>Admin Panel</h2>
+    <a href="a.dashboard.html"><i class="fas fa-chart-line"></i> Dashboard</a>
+    <a href="a.products.html"><i class="fas fa-box"></i> Products</a>
+    <a href="a.orders.html"><i class="fas fa-shopping-cart"></i> Orders</a>
+    <a href="a.customers.html"><i class="fas fa-users"></i> Customers</a>
+    <a href="a.payments.html"><i class="fas fa-money-bill-wave"></i> Payments</a>
+    <a href="a.settings.html" class="active"><i class="fas fa-cogs"></i> Settings</a>
+  </aside>
+
+  <main class="main-content">
+    <header>
+      <h1>Admin Settings ⚙️</h1>
+      <button class="btn" id="logoutBtn">Logout</button>
+    </header>
+
+    <section>
+      <h2 style="color:#d4af37;">Update Profile</h2>
+      <form id="settingsForm">
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="Admin email" required />
+
+        <label for="password">New Password</label>
+        <input type="password" id="password" placeholder="Enter new password" />
+
+        <button type="submit">Save Changes</button>
+        <div id="statusMsg"></div>
+      </form>
+    </section>
+  </main>
+
+  <script src="/js/adminCheck.js" defer></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const form = document.getElementById("settingsForm");
+      const msg = document.getElementById("statusMsg");
+      const logoutBtn = document.getElementById("logoutBtn");
+      const token = localStorage.getItem("adminToken");
+
+      // 🧭 Redirect if missing token
+      if (!token) {
+        window.location.href = "/a.login.html"; // ✅ correct path
+        return;
+      }
+
+      logoutBtn.addEventListener("click", () => {
+        localStorage.removeItem("adminToken");
+        localStorage.removeItem("adminUser");
+        window.location.href = "/a.login.html"; // ✅ correct path
+      });
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        msg.textContent = "Saving...";
+        msg.style.color = "#d4af37";
+
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value.trim();
+
+        try {
+          const res = await fetch("https://annelle-climatic-antwan.ngrok-free.dev/api/users/update", {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ email, password }),
+          });
+
+          const data = await res.json();
+
+          if (!res.ok) throw new Error(data.message || "Failed to update settings");
+
+          msg.textContent = "✅ Settings updated successfully!";
+          msg.style.color = "#4CAF50";
+
+        } catch (err) {
+          msg.textContent = "❌ " + err.message;
+          msg.style.color = "#ff5555";
+        }
+      });
+    });
+  </script>
+</body>
+</html>

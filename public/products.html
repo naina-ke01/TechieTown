@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Products | TechieTown</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="js/cart.js" defer></script>
+  <script src="js/products.js" defer></script>
+  <link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+/>
+
+</head>
+
+<body>
+  
+  <!-- Header -->
+<header class="site-header">
+  <div class="logo">TECHIETOWN</div>
+
+  <!-- Hamburger Menu -->
+        <div
+          class="menu-toggle"
+          id="menu-toggle"
+          role="button"
+          aria-label="Toggle navigation menu"
+          aria-expanded="false"
+          tabindex="0"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+
+  <nav>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="products.html">Products</a></li>
+      <li><a href="cart.html">Cart</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+
+    <div id="cart-toggle" class="cart-icon">
+      🛒 <span id="cart-count">0</span>
+    </div>
+
+  </nav>
+
+<!-- Mini Cart -->
+<aside id="mini-cart" class="mini-cart">
+  <h3>Your Cart</h3>
+  <ul id="mini-cart-items"></ul>
+  <p id="mini-cart-total">Total: KES 0</p>
+  <div class="mini-cart-actions">
+    <button id="clear-cart" class="btn clear-btn">Clear Cart</button>
+    <a href="cart.html" class="checkout-btn">Proceed to Checkout</a>
+  </div>
+</aside>
+
+<div id="overlay" class="overlay"></div>
+
+</header>
+
+  <main>
+    <section class="product-section" style="text-align:center;">
+      <h1>Our Products</h1>
+      <input 
+        type="text" 
+        id="product-filter" 
+        placeholder="Search products..." 
+        class="product-filter" 
+      />
+      
+      <div class="product-grid">
+        <!-- Product cards rendered dynamically -->
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+  <div class="footer-container">
+
+    <!-- Contact Section -->
+    <div class="footer-contact">
+      <h3>CONTACT US:</h3>
+      <p><i class="fas fa-phone"></i> TechieTown</p>
+      <a href="tel:+254799991551">+25479 999 1551</a><br>
+      <p><i class="fas fa-phone"></i> Support</p>
+      <a href="tel:+254799991551">+25479 999 1551</a><br>
+      <p><i class="fas fa-envelope"></i> Email:</p>
+      <a href="mailto:techiestown@gmail.com">techiestown@gmail.com</a><br>
+      <p><i class="fas fa-map-marker-alt"></i> Location:</p>
+      <span>Downtown Plaza, 2nd Floor, Shop 12</span>
+    </div>
+
+      <!-- Quick Links -->
+      <div class="footer-links">
+        <h3>CATEGORIES</h3>
+        <ul>
+          <li><a href="products.html">Smartphones</a></li>
+          <li><a href="products.html">Laptops</a></li>
+          <li><a href="products.html">Accessories</a></li>
+          <li><a href="products.html">Consoles</a></li>
+          <li><a href="products.html">Games</a></li>
+        </ul>
+
+        <h3>INFO</h3>
+        <ul>
+          <li><a href="newsletter.html"> About us</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+        </ul>
+      </div>
+
+    <!-- Social Media -->
+    <div class="footer-social">
+      <h3>Follow Us:</h3>
+      <div class="social-icons">
+        <a href="https://www.instagram.com/"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.facebook.com/"><i class="fab fa-facebook"></i></a>
+        <a href="https://www.tiktok.com/"><i class="fab fa-tiktok"></i></a>
+        <a href="https://x.com/home"><i class="fab fa-x-twitter"></i></a>
+      </div>
+
+    <!-- Payments -->
+      <div class="payment-icons">
+          <img src="myImg/socials/mpesa-seeklogo.com.svg" alt="M-Pesa" class="mpesa-logo">
+        </a>
+
+      <div class="payment-icons">
+        <img src="myImg/socials/Visa.svg" alt="Visa" class="payment-logo">
+      </div>
+
+      <div class="payment-icons">
+        <img src="myImg/socials/equitel.png" alt="equitel" class="payment-logo">
+      </div>
+
+      <div class="payment-icons">
+        <img src="myImg/socials/mastercard.svg" alt="Mastercard" class="payment-logo">
+      </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>Copyright © 2025 TechieTown. All rights reserved. Designed by <a href="https://www.instagram.com/naina_ke/">@nainaKe_</a></p>
+  </div>
+</footer>
+
+<!-- FontAwesome for icons -->
+<script src="https://kit.fontawesom.com/a076d05399.js" crossorigin="anonymous"></script>
+
+  <!-- External JS Files -->
+  <script src="js/cart.js"></script>
+  <script src="js/miniCart.js"></script>
+  <script src="js/ViewModal.js"></script>
+
+
+
+  <!-- Hamburger Menu & Scroll Animation -->
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const menuToggle = document.getElementById("menu-toggle");
+    const navLinks = document.getElementById("nav-links");
+    const header = document.querySelector(".site-header");
+
+    // Toggle mobile menu and update aria-expanded
+    if (menuToggle && navLinks) {
+      const toggleMenu = () => {
+        const isMenuOpen = navLinks.classList.toggle("show");
+        menuToggle.classList.toggle("active");
+        menuToggle.setAttribute("aria-expanded", isMenuOpen.toString());
+      };
+
+      menuToggle.addEventListener("click", toggleMenu);
+
+      // Optional: keyboard accessibility (Enter or Space)
+      menuToggle.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          toggleMenu();
+        }
+      });
+    }
+
+    // Sticky header on scroll
+    window.addEventListener("scroll", () => {
+      if (window.scrollY > 50) {
+        header.classList.add("scrolled");
+      } else {
+        header.classList.remove("scrolled");
+      }
+    });
+  });
+</script>
+
+
+<!-- Floating Call Button -->
+<a href="tel:+254799991551" class="floating-call" title="Call Us">
+  <i class="fas fa-phone"></i>
+</a>
+
+<!-- Floating WhatsApp Button -->
+<a href="https://wa.me/254799991551?text=Hello%20TechieTown%2C%20I%20need%20some%20assistance" 
+   class="floating-whatsapp" 
+   title="Chat on WhatsApp" 
+   target="_blank">
+  <i class="fab fa-whatsapp"></i>
+</a>
+
+</body>
+</html>

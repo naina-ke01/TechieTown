@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin Login | TechieTown</title>
+  <!-- Link to the consolidated admin.css you provided -->
+  <link rel="stylesheet" href="css/admin.css" />
+</head>
+<body class="admin-login">
+  <!-- Login container matches the updated admin.css (login-container + login-box) -->
+  <div class="login-container">
+    <div class="login-box" role="region" aria-labelledby="login-title">
+      <a href="index.html" class="back-button" title="Back to Home" aria-label="Back to Home">&#8592;</a>
+
+      <h1 id="login-title">TechieTown Admin</h1>
+      <p class="subtitle">Sign in to manage products, orders and settings</p>
+
+      <form id="loginForm" class="login-form" novalidate>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="you@techietown.com"
+            required
+            autocomplete="email"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Your password"
+            required
+            autocomplete="current-password"
+          />
+        </div>
+
+        <button type="submit" id="loginBtn" class="btn-login">Login</button>
+
+        <div id="message" class="error-message" aria-live="polite"></div>
+        <div id="loading" class="loading-message" style="display:none;" aria-hidden="true">Logging in…</div>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- Your existing login script (keeps behavior) -->
+  <script src="js/adminLogin.js" defer></script>
+</body>
+</html>

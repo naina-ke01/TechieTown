@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TechieTown Admin - Products</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: #000;
+      color: #fff;
+      display: flex;
+      height: 100vh;
+    }
+    .sidebar {
+      width: 250px;
+      background: linear-gradient(135deg, #111, #222);
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+      box-shadow: 4px 0 15px rgba(212, 175, 55, 0.2);
+    }
+    .sidebar h2 {
+      color: #d4af37;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .sidebar a {
+      text-decoration: none;
+      color: #bbb;
+      padding: 12px 15px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      transition: 0.3s;
+    }
+    .sidebar a:hover, .sidebar a.active {
+      background: #d4af37;
+      color: #111;
+    }
+    .sidebar i {
+      margin-right: 10px;
+    }
+    .main-content {
+      flex: 1;
+      background: #111;
+      padding: 30px;
+      overflow-y: auto;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+    header h1 {
+      color: #d4af37;
+      font-size: 1.5rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #1a1a1a;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    table th, table td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #333;
+    }
+    table th {
+      background: #222;
+      color: #d4af37;
+    }
+    .btn {
+      background: #d4af37;
+      color: #111;
+      border: none;
+      padding: 10px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s;
+      margin-left: 10px;
+    }
+    .btn:hover {
+      background: #c19e34;
+    }
+    .actions {
+      display: flex;
+      gap: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <aside class="sidebar">
+    <h2>Admin Panel</h2>
+    <a href="a.dashboard.html"><i class="fas fa-chart-line"></i> Dashboard</a>
+    <a href="a.products.html" class="active"><i class="fas fa-box"></i> Products</a>
+    <a href="a.orders.html"><i class="fas fa-shopping-cart"></i> Orders</a>
+    <a href="a.customers.html"><i class="fas fa-users"></i> Customers</a>
+    <a href="a.payments.html"><i class="fas fa-money-bill-wave"></i> Payments</a>
+    <a href="a.settings.html"><i class="fas fa-cogs"></i> Settings</a>
+  </aside>
+
+  <main class="main-content">
+    <header>
+      <h1>Products Management</h1>
+      <button class="btn">Logout</button>
+    </header>
+
+    <button class="btn" onclick="location.href='product-add.html'"><i class="fas fa-plus">
+    </i> Add New Product</button>
+
+
+    <table>
+      <br>
+      <thead>
+        <tr>
+          <th>Product ID</th>
+          <th>Name</th>
+          <th>Category</th>
+          <th>Price (KES)</th>
+          <th>Stock</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="products-table-body">
+        <tr>
+          <td>001</td>
+          <td>Wireless Mouse</td>
+          <td>Accessories</td>
+          <td>1,500</td>
+          <td>25</td>
+          <td class="actions">
+            <button class="btn" onclick="editProduct('001')"><i class="fas fa-edit"></i></button>
+            <button class="btn" onclick="deleteProduct('001')"><i class="fas fa-trash"></i></button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </main>
+
+<script src="../js/admin-dashboard.js" defer></script>
+<script src="/js/adminCheck.js" defer></script>
+
+  <script>
+    function editProduct(id) {
+      alert('Edit product ' + id);
+
+    }
+    function deleteProduct(id) {
+      if(confirm('Are you sure you want to delete product ' + id + '?')) {
+        alert('Product deleted');
+
+      }
+    }
+  </script>
+</body>
+</html>

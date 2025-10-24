@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TechieTown</title>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/style.css" />
+  <link 
+    rel="stylesheet" 
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+  />
+</head>
+
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="logo">TECHIETOWN</div>
+
+    <!-- Hamburger Menu -->
+        <div
+          class="menu-toggle"
+          id="menu-toggle"
+          role="button"
+          aria-label="Toggle navigation menu"
+          aria-expanded="false"
+          tabindex="0"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+
+
+    <nav>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="cart.html">Cart</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+
+      <!-- Mini Cart Icon -->
+      <div class="cart-icon" id="cart-toggle">
+        🛒 <span id="cart-count">0</span>
+      </div>
+    </nav>
+
+<div id="overlay" class="overlay"></div>
+
+
+    <!-- Mini Cart -->
+    <aside id="mini-cart" class="mini-cart">
+      <h3>Your Cart</h3>
+      <ul id="mini-cart-items"></ul>
+      <p id="mini-cart-total">Total: KES 0</p>
+
+      <div class="mini-cart-actions">
+        <button id="clear-cart" class="btn clear-btn">Clear Cart</button>
+        <a href="cart.html" class="checkout-btn">Proceed to Checkout</a>
+      </div>
+    </aside>
+  </header>
+
+
+
+    <section class="featured">
+
+        <h2>Subscribe to Our Newsletter</h2>
+
+        <div style="max-width: 500px; margin: auto;">
+
+            <p>Get the latest updates, offers, and new product launches straight to your inbox.</p>
+
+            <form>
+                
+                <input type="email" placeholder="Enter your email" style="width: 100%; padding: 10px;">
+
+                <br><br>
+
+                <input type="submit" value="Subscribe" class="btn">
+
+            </form>
+
+        </div>
+
+    </section>
+
+
+<!-- Footer -->
+<footer class="site-footer">
+  <div class="footer-container">
+    <!-- Contact Section -->
+    <div class="footer-contact">
+      <h3>CONTACT US:</h3>
+      <p><i class="fas fa-phone"></i> TechieTown</p>
+      <a href="tel:+254799991551">+25479 999 1551</a><br>
+      <p><i class="fas fa-envelope"></i> Email:</p>
+      <a href="mailto:techiestown@gmail.com">techiestown@gmail.com</a><br>
+      <p><i class="fas fa-map-marker-alt"></i> Location:</p>
+      <span>Downtown Plaza, 2nd Floor, Shop 12</span>
+    </div>
+
+      <!-- Quick Links -->
+      <div class="footer-links">
+        <h3>CATEGORIES</h3>
+        <ul>
+          <li><a href="products.html">Smartphones</a></li>
+          <li><a href="products.html">Laptops</a></li>
+          <li><a href="products.html">Accessories</a></li>
+          <li><a href="products.html">Consoles</a></li>
+          <li><a href="products.html">Games</a></li>
+        </ul>
+
+        <h3>INFO</h3>
+        <ul>
+          <li><a href="newsletter.html"> About us</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+        </ul>
+      </div>
+
+    <!-- Social Media -->
+    <div class="footer-social">
+      <h3>Follow Us:</h3>
+      <div class="social-icons">
+        <a href="https://www.instagram.com/"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.facebook.com/"><i class="fab fa-facebook"></i></a>
+        <a href="https://www.tiktok.com/"><i class="fab fa-tiktok"></i></a>
+        <a href="https://x.com/home"><i class="fab fa-x-twitter"></i></a>
+      </div>
+
+      <div class="payment-icons">
+        <img src="myImg/socials/mpesa-seeklogo.com.svg" alt="M-Pesa" class="mpesa-logo">
+        <img src="myImg/socials/Visa.svg" alt="Visa" class="payment-logo">
+        <img src="myImg/socials/equitel.png" alt="Equitel" class="payment-logo">
+        <img src="myImg/socials/mastercard.svg" alt="Mastercard" class="payment-logo">
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>Copyright © 2025 TechieTown. All rights reserved. Designed by <a href="https://www.instagram.com/naina_ke/">@nainaKe_</a></p>
+  </div>
+</footer>
+
+<!-- Floating Buttons -->
+<a href="tel:+254799991551" class="floating-call" title="Call Us">
+  <i class="fas fa-phone"></i>
+</a>
+
+<a href="https://wa.me/254799991551?text=Hello%20TechieTown%2C%20I%20need%20some%20assistance"
+   class="floating-whatsapp" title="Chat on WhatsApp" target="_blank">
+  <i class="fab fa-whatsapp"></i>
+</a>
+
+</body>
+</html>

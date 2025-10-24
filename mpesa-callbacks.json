@@ -1,0 +1,122 @@
+[
+  {
+    "Body": {
+      "stkCallback": {
+        "MerchantRequestID": "9ecf-497b-a4bc-759aa106965e9226",
+        "CheckoutRequestID": "ws_CO_14102025193440124799991551",
+        "ResultCode": 1032,
+        "ResultDesc": "Request Cancelled by user."
+      }
+    }
+  },
+  {
+    "Body": {
+      "stkCallback": {
+        "MerchantRequestID": "56d4-407a-a1e3-0cb56a355c8232592",
+        "CheckoutRequestID": "ws_CO_15102025073252192799991551",
+        "ResultCode": 1032,
+        "ResultDesc": "Request Cancelled by user."
+      }
+    }
+  },
+  {
+    "Body": {
+      "stkCallback": {
+        "MerchantRequestID": "56d4-407a-a1e3-0cb56a355c8238292",
+        "CheckoutRequestID": "ws_CO_15102025165617898799991551",
+        "ResultCode": 1032,
+        "ResultDesc": "Request Cancelled by user."
+      }
+    }
+  },
+  {
+    "Body": {
+      "stkCallback": {
+        "MerchantRequestID": "1b5c-4beb-9743-17b3e4cf851515871",
+        "CheckoutRequestID": "ws_CO_15102025192640872799991551",
+        "ResultCode": 1037,
+        "ResultDesc": "No response from user."
+      }
+    }
+  },
+  {
+    "Body": {
+      "stkCallback": {
+        "MerchantRequestID": "56d4-407a-a1e3-0cb56a355c8241095",
+        "CheckoutRequestID": "ws_CO_15102025192908026799991551",
+        "ResultCode": 1037,
+        "ResultDesc": "No response from user."
+      }
+    }
+  },
+  {
+    "Body": {
+      "stkCallback": {
+        "MerchantRequestID": "9435-4ad9-9049-4ea67d1be16911120",
+        "CheckoutRequestID": "ws_CO_15102025201433575799991551",
+        "ResultCode": 1032,
+        "ResultDesc": "Request Cancelled by user."
+      }
+    }
+  },
+  {
+    "Body": {
+      "stkCallback": {
+        "MerchantRequestID": "6f23-4b16-bfec-a4fbda25dc05592",
+        "CheckoutRequestID": "ws_CO_16102025074237356799991551",
+        "ResultCode": 1032,
+        "ResultDesc": "Request Cancelled by user."
+      }
+    }
+  },
+  {
+    "Body": {
+      "stkCallback": {
+        "MerchantRequestID": "09b1-450e-8ef2-fad1d85bd2c88744",
+        "CheckoutRequestID": "ws_CO_16102025153234506799991551",
+        "ResultCode": 1032,
+        "ResultDesc": "Request Cancelled by user."
+      }
+    }
+  },
+  {
+    "Body": {
+      "stkCallback": {
+        "MerchantRequestID": "56d4-407a-a1e3-0cb56a355c8254326",
+        "CheckoutRequestID": "ws_CO_16102025153253322799991551",
+        "ResultCode": 1032,
+        "ResultDesc": "Request Cancelled by user."
+      }
+    }
+  },
+  {
+    "Body": {
+      "stkCallback": {
+        "MerchantRequestID": "6f23-4b16-bfec-a4fbda25dc057580",
+        "CheckoutRequestID": "ws_CO_16102025153354539799991551",
+        "ResultCode": 1032,
+        "ResultDesc": "Request Cancelled by user."
+      }
+    }
+  },
+  {
+    "Body": {
+      "stkCallback": {
+        "MerchantRequestID": "ebb7-46fd-b167-a47f62a2d0ca9483",
+        "CheckoutRequestID": "ws_CO_16102025153421086799991551",
+        "ResultCode": 1032,
+        "ResultDesc": "Request Cancelled by user."
+      }
+    }
+  },
+  {
+    "Body": {
+      "stkCallback": {
+        "MerchantRequestID": "56d4-407a-a1e3-0cb56a355c8254388",
+        "CheckoutRequestID": "ws_CO_16102025153509822799991551",
+        "ResultCode": 1032,
+        "ResultDesc": "Request Cancelled by user."
+      }
+    }
+  }
+]
