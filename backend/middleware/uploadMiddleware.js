@@ -19,21 +19,31 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = (req, file, cb) => {
-  const filetypes = /jpg|jpeg|png|webp/;
+  const filetypes = /jpg|jpeg|png|webp|jfif|pjpeg|pjsig/;
   const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-  const mimetype = filetypes.test(file.mimetype);
+  // Broaden mimetype check to handle various JPEG subtypes
+  const mimetype = file.mimetype.startsWith('image/') && (
+    filetypes.test(file.mimetype.split('/')[1]) ||
+    file.mimetype.includes('jpeg')
+  );
 
   if (extname && mimetype) {
     cb(null, true);
   } else {
-    cb(new Error("Only image files are allowed!"), false);
+    console.error("❌ Upload Rejected:", {
+      filename: file.originalname,
+      mimetype: file.mimetype,
+      extension: path.extname(file.originalname),
+      reason: !extname ? "Invalid Extension" : "Invalid Mime-type"
+    });
+    cb(new Error(`File type not supported (${file.mimetype}). Please use JPG, PNG or WebP.`), false);
   }
 };
 
 const upload = multer({
   storage,
   fileFilter,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB max
+  limits: { fileSize: 10 * 1024 * 1024 }, // Increased to 10MB
 });
 
 export default upload;

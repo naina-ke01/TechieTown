@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Checkout | TechieTown</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <style>
+        .checkout-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .checkout-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .checkout-card {
+            background: #111;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 0 25px rgba(212, 175, 55, 0.1);
+        }
+
+        .checkout-card h2 {
+            color: #d4af37;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+        }
+
+        .payment-methods {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .payment-method {
+            flex: 1;
+            padding: 15px;
+            border: 1px solid #333;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .payment-method i {
+            font-size: 1.5rem;
+        }
+
+        .payment-method.active {
+            border-color: #d4af37;
+            background: rgba(212, 175, 55, 0.05);
+        }
+
+        .payment-method.active i {
+            color: #d4af37;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #bbb;
+            font-size: 0.9rem;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            background: #222;
+            border: 1px solid #333;
+            color: #fff;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: #d4af37;
+        }
+
+        .visa-details {
+            display: none;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed #333;
+        }
+
+        .visa-details.show {
+            display: block;
+        }
+
+        .row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .row .form-group {
+            flex: 1;
+        }
+
+        .order-summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            color: #bbb;
+        }
+
+        .order-summary-total {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #333;
+            color: #d4af37;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .btn-pay {
+            width: 100%;
+            padding: 15px;
+            background: #d4af37;
+            color: #111;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: 0.3s;
+        }
+
+        .btn-pay:hover {
+            background: #c19e34;
+            transform: translateY(-2px);
+        }
+
+        .btn-pay:disabled {
+            background: #555;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .message {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .message.info {
+            display: block;
+            background: rgba(0, 123, 255, 0.1);
+            color: #007bff;
+            border: 1px solid #007bff;
+        }
+
+        .message.error {
+            display: block;
+            background: rgba(220, 53, 69, 0.1);
+            color: #dc3545;
+            border: 1px solid #dc3545;
+        }
+
+        .message.success {
+            display: block;
+            background: rgba(40, 167, 69, 0.1);
+            color: #28a745;
+            border: 1px solid #28a745;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="logo">TECHIETOWN</div>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="products.html">Products</a></li>
+                <li><a href="cart.html">Cart</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="checkout-container">
+        <div class="checkout-card">
+            <h2>Payment Information</h2>
+
+            <div class="payment-methods">
+                <div class="payment-method active" id="method-mpesa" onclick="selectPaymentMethod('M-Pesa')">
+                    <i class="fas fa-mobile-alt"></i>
+                    <span>M-Pesa</span>
+                </div>
+                <div class="payment-method" id="method-visa" onclick="selectPaymentMethod('Visa')">
+                    <i class="fab fa-cc-visa"></i>
+                    <span>Visa Card</span>
+                </div>
+            </div>
+
+            <form id="checkout-form">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" placeholder="John Doe" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" placeholder="john@example.com" required>
+                </div>
+
+                <div class="form-group" id="phone-group">
+                    <label for="phone">M-Pesa Number</label>
+                    <input type="tel" id="phone" placeholder="07XXXXXXXX" required>
+                </div>
+
+                <div class="visa-details" id="visa-details">
+                    <div class="form-group">
+                        <label for="card-number">Card Number</label>
+                        <input type="text" id="card-number" placeholder="XXXX XXXX XXXX XXXX">
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="expiry">Expiry (MM/YY)</label>
+                            <input type="text" id="expiry" placeholder="MM/YY">
+                        </div>
+                        <div class="form-group">
+                            <label for="cvc">CVC</label>
+                            <input type="text" id="cvc" placeholder="123">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="address">Delivery Address</label>
+                    <textarea id="address" rows="3" placeholder="Enter your full delivery address" required></textarea>
+                </div>
+
+                <button type="button" id="payButton" class="btn-pay">Pay with M-Pesa</button>
+                <div id="checkout-message" class="message"></div>
+            </form>
+        </div>
+
+        <div class="checkout-card">
+            <h2>Order Summary</h2>
+            <div id="order-items">
+                <!-- Injected by JS -->
+            </div>
+            <div class="order-summary-total">
+                <span>Total Amount</span>
+                <span id="total-amount">KES 0</span>
+            </div>
+
+            <div style="margin-top: 30px; text-align: center;">
+                <p style="color: #666; font-size: 0.85rem;">
+                    <i class="fas fa-lock"></i> Secure & encrypted payment processing
+                </p>
+                <div style="margin-top: 15px; display: flex; justify-content: center; gap: 15px; opacity: 0.6;">
+                    <img src="myImg/socials/mpesa-seeklogo.com.svg" width="40" alt="M-Pesa">
+                    <img src="myImg/socials/Visa.svg" width="40" alt="Visa">
+                    <img src="myImg/socials/mastercard.svg" width="40" alt="MasterCard">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="site-footer">
+        <!-- Existing footer content simplified for checkout -->
+        <div class="footer-bottom">
+            <p>&copy; 2025 TechieTown. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/checkout.js"></script>
+</body>
+
+</html>

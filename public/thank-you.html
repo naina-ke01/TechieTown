@@ -1,111 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>Thank You | TechieTown</title>
+
   <link rel="stylesheet" href="css/style.css" />
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-  />
-  <style>
-    .hero {
-      animation: fadeIn 1.5s ease-in-out;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-  </style>
-</head>
-
-<body>
-  <header class="site-header">
-    <div class="logo">TECHIETOWN</div>
-    <div class="menu-toggle" id="menu-toggle" role="button" aria-label="Toggle navigation menu" aria-expanded="false" tabindex="0">
-      <span></span><span></span><span></span><span></span>
-    </div>
-    <nav>
-      <ul class="nav-links" id="nav-links">
-        <li><a href="index.html" class="active">Home</a></li>
-        <li><a href="products.html">Products</a></li>
-        <li><a href="cart.html">Cart</a></li>
-        <li><a href="contact.html">Contact</a></li>
-      </ul>
-    </nav>
-  </header>
-
-  <section class="hero">
-    <h1>Thank You!</h1>
-    <p>Your M-Pesa payment was successful.</p>
-  </section>
-
-  <section class="featured" style="text-align:center;">
-    <h2>Order Confirmation</h2>
-    <p style="color:#ccc; max-width:600px; margin:auto;">
-      We’ve received your payment and are now processing your order.  
-      A confirmation message will be sent to your M-Pesa number shortly.
-    </p>
-    <div style="margin-top:25px;">
-      <a href="index.html" class="btn">Return to Home</a>
-      <a href="cart.html" class="btn" style="background:#fff; color:#000;">View Cart</a>
-    </div>
-  </section>
-
-  <footer class="footer">
-    <div class="footer-bottom">
-      <p>
-        Copyright © 2025 
-        <strong>TechieTown</strong>. All rights reserved.  
-        Designed by 
-        <a href="https://www.instagram.com/naina_ke/" target="_blank">@naina_ke</a>
-      </p>
-    </div>
-  </footer>
-
-  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-  <script src="js/cart.js"></script>
-  <script src="js/miniCart.js"></script>
-  <script src="js/ViewModal.js"></script>
-
-  <div id="overlay" class="overlay"></div>
-
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const menuToggle = document.getElementById("menu-toggle");
-      const navLinks = document.getElementById("nav-links");
-      const header = document.querySelector(".site-header");
-
-      if (menuToggle && navLinks) {
-        const toggleMenu = () => {
-          const isMenuOpen = navLinks.classList.toggle("show");
-          menuToggle.classList.toggle("active");
-          menuToggle.setAttribute("aria-expanded", isMenuOpen.toString());
-        };
-        menuToggle.addEventListener("click", toggleMenu);
-        menuToggle.addEventListener("keydown", (e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            e.preventDefault();
-            toggleMenu();
-          }
-        });
-      }
-
-      window.addEventListener("scroll", () => {
-        if (window.scrollY > 50) header.classList.add("scrolled");
-        else header.class
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Thank You | TechieTown</title>
-  <link rel="stylesheet" href="css/style.css" />
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-  />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
 
 <body>
@@ -114,67 +17,83 @@
     <div class="logo">TECHIETOWN</div>
 
     <!-- Hamburger Menu -->
-    <div
-      class="menu-toggle"
-      id="menu-toggle"
-      role="button"
-      aria-label="Toggle navigation menu"
-      aria-expanded="false"
-      tabindex="0"
-    >
+    <div class="menu-toggle" id="menu-toggle" role="button" aria-label="Toggle navigation menu" aria-expanded="false"
+      tabindex="0">
       <span></span>
       <span></span>
       <span></span>
       <span></span>
     </div>
 
-    <nav>
-      <ul class="nav-links" id="nav-links">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="products.html">Products</a></li>
-        <li><a href="cart.html">Cart</a></li>
-        <li><a href="contact.html">Contact</a></li>
-      </ul>
     </nav>
+    <div id="authLinks" class="auth-links"></div>
   </header>
+
+
+
+
 
   <!-- Thank You Section -->
   <section class="hero">
     <h1>Thank You!</h1>
-    <p>Your M-Pesa payment was successful.</p>
+    <p id="payment-confirmation">Your order is being processed.</p>
   </section>
+
+
 
   <section class="featured" style="text-align:center;">
     <h2>Order Confirmation</h2>
     <p style="color:#ccc; max-width:600px; margin:auto;">
-      We’ve received your payment and are now processing your order.  
-      A confirmation message will be sent to your M-Pesa number shortly.
+      You can follow payment and delivery updates from your order tracking page.
     </p>
 
+
     <div style="margin-top:25px;">
-      <a href="index.html" class="btn">Return to Home</a>
-      <a href="cart.html" class="btn" style="background:#fff; color:#000;">View Cart</a>
+      <a id="track-order-link" href="tracking.html" class="btn">Track Your Order</a>
+      <a id="continue-shopping-link" href="index.html" class="btn" style="background:#fff; color:#000;">Continue Shopping</a>
     </div>
+    <p id="tracking-redirect-notice" style="color:#aaa; margin-top:15px;"></p>
   </section>
+
+
 
   <!-- Footer -->
   <footer class="footer">
     <div class="footer-bottom">
       <p>
-        Copyright © 2025 
-        <strong>TechieTown</strong>. All rights reserved.  
-        Designed by 
+        Copyright © 2025
+        <strong>TechieTown</strong>. All rights reserved.
+        Designed by
         <a href="https://www.instagram.com/naina_ke/" target="_blank">@naina_ke</a>
       </p>
     </div>
   </footer>
 
+
+
+  <!-- Floating Call Button -->
+  <a href="tel:+254799991551" class="floating-call" title="Call Us">
+    <i class="fas fa-phone"></i>
+  </a>
+
+  <!-- Floating WhatsApp Button -->
+  <a href="https://wa.me/254799991551?text=Hello%20TechieTown%2C%20I%20need%20some%20assistance"
+    class="floating-whatsapp" title="Chat on WhatsApp" target="_blank">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+
+
+
   <!-- External JS -->
-  <script src="js/cart.js"></script>
   <script src="js/miniCart.js"></script>
   <script src="js/ViewModal.js"></script>
+  <script src="js/auth.js"></script>
 
   <div id="overlay" class="overlay"></div>
+
+
+
+
 
   <!-- Hamburger Menu & Scroll Animation -->
   <script>
@@ -208,33 +127,92 @@
     });
   </script>
 
-  <!-- Floating Call Button -->
-  <a href="tel:+254799991551" class="floating-call" title="Call Us">
-    <i class="fas fa-phone"></i>
+
+
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-contact">
+        <h3>Contact Us</h3>
+        <p><i class="fas fa-phone-alt"></i> <a href="tel:+254799991551">TechieTown: +2547 99 991 551</a></p>
+        <p><i class="fas fa-phone-alt"></i> <a href="tel:+254799991551">Support: +2547 99 991 551</a></p>
+        <p><i class="fas fa-envelope"></i> <a href="mailto:techiestown@gmail.com">techiestown@gmail.com</a></p>
+        <p><i class="fas fa-map-marker-alt"></i> Downtown Plaza, 2nd Floor, Shop 12</p>
+      </div>
+
+      <div class="footer-links">
+        <h3>Information</h3>
+        <ul>
+          <li><a href="products.html">Our Products</a></li>
+          <li><a href="contact.html">Contact Us</a></li>
+          <li><a href="newsletter.html">About TechieTown</a></li>
+          <li><a href="tracking.html">Track Order</a></li>
+          <li><a href="a.login.html">Admin Portal</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-social">
+        <h3>Follow Us</h3>
+        <div class="social-icons">
+          <a href="https://www.instagram.com/" target="_blank"><i class="fab fa-instagram"></i></a>
+          <a href="https://www.facebook.com/" target="_blank"><i class="fab fa-facebook"></i></a>
+          <a href="https://www.tiktok.com/" target="_blank"><i class="fab fa-tiktok"></i></a>
+          <a href="https://x.com/home" target="_blank"><i class="fab fa-x-twitter"></i></a>
+        </div>
+        <div class="payment-icons">
+          <img src="myImg/socials/mpesa-seeklogo.com.svg" alt="M-Pesa" class="payment-logo">
+          <img src="myImg/socials/Visa.svg" alt="Visa" class="payment-logo">
+          <img src="myImg/socials/equitel.png" alt="Equitel" class="payment-logo">
+          <img src="myImg/socials/mastercard.svg" alt="Mastercard" class="payment-logo">
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 TechieTown. All rights reserved. Designed by <a href="https://www.instagram.com/naina_ke/"
+          target="_blank">@nainaKe_</a></p>
+    </div>
+  </footer>
+
+  <!-- Floating Buttons -->
+  <a href="tel:+254799991551" class="floating-call" title="Call Us" aria-label="Call TechieTown">
+    <i class="fas fa-phone-alt"></i>
   </a>
 
-  <!-- Floating WhatsApp Button -->
-  <a
-    href="https://wa.me/254799991551?text=Hello%20TechieTown%2C%20I%20need%20some%20assistance"
-    class="floating-whatsapp"
-    title="Chat on WhatsApp"
-    target="_blank"
-  >
+  <a href="https://wa.me/254799991551?text=Hello%20TechieTown%2C%20I%20need%20some%20assistance"
+    class="floating-whatsapp" title="Chat on WhatsApp" aria-label="WhatsApp TechieTown" target="_blank">
     <i class="fab fa-whatsapp"></i>
   </a>
 
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
   <!-- Payment Verification Redirect -->
   <script>
-    // Redirect if user visits thankyou.html without a payment success flag
     const paymentStatus = sessionStorage.getItem("mpesa_payment_success");
-    if (!paymentStatus) {
-      setTimeout(() => {
-        window.location.href = "cart.html";
-      }, 3000);
-    } else {
-      // Clear flag after showing the page
+    const orderId = sessionStorage.getItem("lastOrderId");
+    const lastPaymentStatus = sessionStorage.getItem("lastPaymentStatus");
+    const trackingLink = document.getElementById("track-order-link");
+    const redirectNotice = document.getElementById("tracking-redirect-notice");
+
+    if (orderId) {
+      trackingLink.href = `tracking.html?id=${encodeURIComponent(orderId)}`;
+    }
+
+    if (paymentStatus && orderId) {
+      document.getElementById("payment-confirmation").textContent =
+        lastPaymentStatus === "success"
+          ? "Your payment was successful. Your order is now processing."
+          : "Your M-Pesa payment request was sent. Track your order for payment confirmation and delivery updates.";
+      redirectNotice.textContent = "We’ll open your order tracking page in 8 seconds.";
+      const redirectTimer = setTimeout(() => {
+        window.location.href = trackingLink.href;
+      }, 8000);
+      trackingLink.addEventListener("click", () => clearTimeout(redirectTimer));
+      document.getElementById("continue-shopping-link").addEventListener("click", () => clearTimeout(redirectTimer));
       sessionStorage.removeItem("mpesa_payment_success");
+    } else {
+      document.getElementById("payment-confirmation").textContent =
+        "Your order history and delivery updates are available from the tracking page.";
     }
   </script>
 </body>
+
 </html>

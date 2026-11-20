@@ -1,6 +1,7 @@
 // frontend/js/payment-success.js
-
 // Function to check if payment was completed
+
+
 async function checkPaymentStatus() {
   try {
     const res = await fetch("/api/payments/callbacks");
@@ -28,4 +29,3 @@ async function checkPaymentStatus() {
 
 // Start polling
 checkPaymentStatus();
-

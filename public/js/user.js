@@ -26,6 +26,7 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
     localStorage.setItem("token", data.token);
     localStorage.setItem("user", JSON.stringify(data.user));
 
+    
     // Redirect based on role
     if (data.user.role === "admin") {
       window.location.href = "admin/a.dashboard.html";

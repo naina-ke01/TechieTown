@@ -18,9 +18,24 @@ function openModal(productIndex) {
     <img src="${selected.img}" alt="${selected.title}" onclick="document.getElementById('mainImage').src='${selected.img}'">
   `;
 
-  modal.style.display = "block";
+  // class to trigger CSS centering and visibility
+  modal.classList.add('show');
 }
 
 function closeModal() {
-  document.getElementById("productModal").style.display = "none";
+  const modal = document.getElementById("productModal");
+  if (modal) modal.classList.remove('show');
 }
+
+// close buttons also remove .show
+document.addEventListener('DOMContentLoaded', () => {
+  const modal = document.getElementById('productModal');
+  if (!modal) return;
+  
+  // close button inside modal
+  modal.addEventListener('click', (e) => {
+    if (e.target.classList.contains('close-btn') || e.target.id === 'productModal') {
+      modal.classList.remove('show');
+    }
+  });
+});

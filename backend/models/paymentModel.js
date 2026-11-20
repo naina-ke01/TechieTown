@@ -50,7 +50,7 @@ const paymentSchema = new mongoose.Schema(
     // Transaction Type
     transactionType: {
       type: String,
-      enum: ["STK_PUSH", "C2B", "B2C", "MANUAL"],
+      enum: ["STK_PUSH", "C2B", "B2C", "MANUAL", "VISA MANUAL"],
       default: "STK_PUSH",
     },
 
@@ -58,6 +58,12 @@ const paymentSchema = new mongoose.Schema(
     orderId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Order",
+    },
+    // Payment Method
+    paymentMethod: {
+      type: String,
+      enum: ["M-Pesa", "Visa"],
+      default: "M-Pesa",
     },
   },
   {

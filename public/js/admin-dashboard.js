@@ -1,157 +1,213 @@
-// admin/js/admin-dashboard.js
-let API_BASE_URL = null;
+// public/js/admin-dashboard.js
 
 document.addEventListener("DOMContentLoaded", async () => {
+  // ===== CHECK AUTHENTICATION =====
+  const isLoggedIn = localStorage.getItem("isAdminLoggedIn") === "true";
+  const adminUser = JSON.parse(localStorage.getItem("adminUser") || "{}");
+
+  if (!isLoggedIn || !adminUser.email) {
+    console.warn("⚠️ No admin session found, redirecting...");
+    // Login page is at root
+    window.location.href = "/a.login.html";
+    return;
+  }
+
+
+
+  // ===== GET DOM ELEMENTS =====
   const logoutBtn = document.getElementById("logoutBtn");
   const adminGreeting = document.getElementById("adminGreeting");
-
   const productCountEl = document.getElementById("productCount");
   const orderCountEl = document.getElementById("orderCount");
   const paymentCountEl = document.getElementById("paymentCount");
-
   const ordersTableBody = document.getElementById("ordersTableBody");
   const paymentsTableBody = document.getElementById("paymentsTableBody");
 
-  // === STEP 1: Determine API base URL ===
-  try {
-    const res = await fetch("/api/config");
-    const data = await res.json();
-    API_BASE_URL = data.baseUrl || window.location.origin;
-  } catch {
-    console.warn("⚠️ Using localhost fallback");
-    API_BASE_URL = "http://localhost:3000";
+
+
+  // ===== GREET ADMIN =====
+  if (adminGreeting) {
+    adminGreeting.textContent = `Welcome, ${adminUser.name || "Admin"} 👋`;
   }
 
-  // === STEP 2: Get token and user ===
-  const token = localStorage.getItem("adminToken");
-  const user = JSON.parse(localStorage.getItem("adminUser") || "{}");
 
-  if (!token || !user || user.role !== "admin") {
-    console.warn("⚠️ No valid admin session found, redirecting...");
-    window.location.href = "/a.login.html";
-    return;
-  }
 
-  // === STEP 3: Verify token ===
-  try {
-    const verifyRes = await fetch(`${API_BASE_URL}/api/users/verify-token`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
 
-    if (!verifyRes.ok) {
-      throw new Error("Token verification failed");
-    }
-
-    const verifyData = await verifyRes.json();
-    adminGreeting.textContent = `Welcome, ${verifyData.user?.name || "Admin"} 👋`;
-
-  } catch (err) {
-    console.error("❌ Token verification error:", err);
-    localStorage.removeItem("adminToken");
-    localStorage.removeItem("adminUser");
-    window.location.href = "/a.login.html";
-    return;
-  }
-
-  // === STEP 4: Fetch dashboard data ===
+  // ===== FETCH DASHBOARD DATA =====
   async function fetchDashboardData() {
     try {
-      // Fetch counts
-      const [productsRes, ordersRes, paymentsRes] = await Promise.all([
-        fetch(`${API_BASE_URL}/api/products/count`, {
-          headers: { Authorization: `Bearer ${token}` },
-        }),
-        fetch(`${API_BASE_URL}/api/orders/count`, {
-          headers: { Authorization: `Bearer ${token}` },
-        }),
-        fetch(`${API_BASE_URL}/api/payments/count`, {
-          headers: { Authorization: `Bearer ${token}` },
-        }),
-      ]);
+      console.log("📊 Fetching dashboard data...");
 
-      const productsData = await productsRes.json();
-      const ordersData = await ordersRes.json();
-      const paymentsData = await paymentsRes.json();
+      const response = await fetch("/api/admin/dashboard");
 
-      productCountEl.textContent = productsData.count || 0;
-      orderCountEl.textContent = ordersData.count || 0;
-      paymentCountEl.textContent = paymentsData.count || 0;
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
 
-      // Fetch recent orders and payments
-      const recentOrdersRes = await fetch(`${API_BASE_URL}/api/orders/recent`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      const recentPaymentsRes = await fetch(`${API_BASE_URL}/api/payments/recent`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const data = await response.json();
+      console.log("✅ Dashboard data received:", data);
 
-      const recentOrders = await recentOrdersRes.json();
-      const recentPayments = await recentPaymentsRes.json();
+      // Update counts
+      if (productCountEl) productCountEl.textContent = data.counts?.productCount || 0;
+      if (orderCountEl) orderCountEl.textContent = data.counts?.orderCount || 0;
+      if (paymentCountEl) paymentCountEl.textContent = data.counts?.paymentCount || 0;
 
-      renderOrders(recentOrders);
-      renderPayments(recentPayments);
+      // Fetch and display customer count
+      await fetchCustomerCount();
+
+      // Display revenue
+      const revenue = data.revenue?.total || 0;
+      const revenueEl = document.getElementById("totalRevenue");
+      if (revenueEl) {
+        revenueEl.textContent = `KES ${revenue.toLocaleString()}`;
+      }
+
+      // Render tables
+      if (ordersTableBody) renderOrders(data.recentOrders || []);
+      if (paymentsTableBody) renderPayments(data.recentPayments || []);
+
+      // Show backend message if exists
+      if (data.message) {
+        console.log("📝 Backend:", data.message);
+      }
 
     } catch (err) {
       console.error("❌ Dashboard fetch error:", err);
+      showError(ordersTableBody, err.message);
+      showError(paymentsTableBody, err.message);
     }
   }
 
-  // === STEP 5: Render functions ===
+  // ===== FETCH CUSTOMER COUNT =====
+  async function fetchCustomerCount() {
+    try {
+      const response = await fetch("/api/admin/customers");
+      const data = await response.json();
+
+      const customerCountEl = document.getElementById("customerCount");
+      if (customerCountEl && data.success) {
+        customerCountEl.textContent = data.count || 0;
+      }
+    } catch (err) {
+      console.error("❌ Customer count fetch error:", err);
+    }
+  }
+
+
+
+
+  // ===== RENDER ORDERS TABLE =====
   function renderOrders(orders) {
+    if (!ordersTableBody) return;
+
     ordersTableBody.innerHTML = "";
 
     if (!orders || orders.length === 0) {
-      ordersTableBody.innerHTML =
-        `<tr><td colspan="5" style="text-align:center; color:#777;">No recent orders</td></tr>`;
+      ordersTableBody.innerHTML = `
+          <tr>
+            <td colspan="5" style="text-align:center;color:#777;">
+              No recent orders found
+            </td>
+          </tr>
+        `;
       return;
     }
 
-    orders.forEach((order) => {
+    orders.forEach(order => {
       const row = document.createElement("tr");
       row.innerHTML = `
-        <td>${order._id || "-"}</td>
-        <td>${order.userEmail || "N/A"}</td>
-        <td>$${order.totalAmount?.toFixed(2) || "0.00"}</td>
-        <td>${order.paymentStatus || "Pending"}</td>
-        <td>${new Date(order.createdAt).toLocaleDateString()}</td>
-      `;
+          <td>${order._id}</td>
+          <td>${order.userEmail || order.userName || "Guest"}</td>
+          <td>KES ${order.totalAmount?.toLocaleString() || "0"}</td>
+          <td><span style="color: ${order.paymentStatus === 'Paid' ? '#90ee90' : '#ffaa00'}">${order.paymentStatus || "Pending"}</span></td>
+          <td>${new Date(order.createdAt).toLocaleDateString()}</td>
+        `;
       ordersTableBody.appendChild(row);
     });
   }
 
+
+
+
+
+  // ===== RENDER PAYMENTS TABLE =====
   function renderPayments(payments) {
+    if (!paymentsTableBody) return;
+
     paymentsTableBody.innerHTML = "";
 
     if (!payments || payments.length === 0) {
-      paymentsTableBody.innerHTML =
-        `<tr><td colspan="5" style="text-align:center; color:#777;">No recent payments</td></tr>`;
+      paymentsTableBody.innerHTML = `
+          <tr>
+            <td colspan="5" style="text-align:center;color:#777;">
+              No recent payments found
+            </td>
+          </tr>
+        `;
       return;
     }
 
-    payments.forEach((p) => {
+    payments.forEach(p => {
       const row = document.createElement("tr");
       row.innerHTML = `
-        <td>${p._id || "-"}</td>
-        <td>${p.transactionId || "N/A"}</td>
-        <td>$${p.amount?.toFixed(2) || "0.00"}</td>
-        <td>${p.status || "Pending"}</td>
-        <td>${new Date(p.createdAt).toLocaleDateString()}</td>
-      `;
+          <td>${p._id}</td>
+          <td>${p.transactionId || "N/A"}</td>
+          <td>KES ${p.amount?.toLocaleString() || "0"}</td>
+          <td><span style="color: #90ee90">${p.status}</span></td>
+          <td>${new Date(p.createdAt).toLocaleDateString()}</td>
+        `;
       paymentsTableBody.appendChild(row);
     });
   }
 
-  // === STEP 6: Logout handler ===
-  logoutBtn.addEventListener("click", () => {
-    localStorage.removeItem("adminToken");
-    localStorage.removeItem("adminUser");
-    window.location.href = "/a.login.html";
+
+
+
+  // ===== ERROR DISPLAY =====
+  function showError(tableBody, message) {
+    if (!tableBody) return;
+    tableBody.innerHTML = `
+      <tr>
+        <td colspan="5" style="text-align:center;color:#ff6b6b;">
+          ⚠️ Error: ${message}
+        </td>
+      </tr>
+    `;
+  }
+
+
+
+
+  // ===== LOGOUT HANDLER =====
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      console.log("👋 Admin logging out...");
+      localStorage.removeItem("isAdminLoggedIn");
+      localStorage.removeItem("adminUser");
+      window.location.href = "/a.login.html";
+    });
+  }
+
+
+
+
+
+  // Also handle any logout buttons in other pages
+  const allLogoutBtns = document.querySelectorAll(".btn-logout, #logoutBtn");
+  allLogoutBtns.forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      console.log("👋 Admin logging out...");
+      localStorage.removeItem("isAdminLoggedIn");
+      localStorage.removeItem("adminUser");
+      window.location.href = "/a.login.html";
+    });
   });
 
-  // === STEP 7: Initialize dashboard ===
+
+
+
+  // ===== INITIALIZE DASHBOARD =====
   fetchDashboardData();
 });

@@ -1,33 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TechieTown - M-Pesa Checkout</title>
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
   <style>
-    body {
-      background: #000;
-      color: #fff;
-      font-family: "Poppins", sans-serif;
-      margin: 0;
-      padding: 0;
-    }
     .hero {
       text-align: center;
       padding: 40px 20px;
       background: linear-gradient(135deg, #111, #222);
     }
+
     .hero h1 {
       color: #d4af37;
       margin-bottom: 10px;
       font-size: 2rem;
     }
+
     .hero p {
       color: #bbb;
       font-size: 1rem;
     }
+
     .featured {
       max-width: 500px;
       margin: 40px auto;
@@ -36,18 +34,22 @@
       border-radius: 15px;
       box-shadow: 0 0 25px rgba(212, 175, 55, 0.1);
     }
+
     .featured h2 {
       text-align: center;
       color: #d4af37;
       margin-bottom: 25px;
     }
+
     form label {
       display: block;
       margin-bottom: 6px;
       font-weight: 500;
       color: #d4af37;
     }
-    form input, form textarea {
+
+    form input,
+    form textarea {
       width: 100%;
       padding: 12px;
       margin-bottom: 15px;
@@ -58,9 +60,12 @@
       font-size: 0.95rem;
       outline: none;
     }
-    form input::placeholder, form textarea::placeholder {
+
+    form input::placeholder,
+    form textarea::placeholder {
       color: #888;
     }
+
     .btn {
       width: 100%;
       padding: 12px;
@@ -73,14 +78,17 @@
       cursor: pointer;
       transition: 0.3s ease;
     }
+
     .btn:hover {
       background: #c19e34;
       transform: scale(1.03);
     }
+
     .payment-icons {
       text-align: center;
       margin-top: 25px;
     }
+
     .payment-icons img {
       width: 55px;
       height: auto;
@@ -88,10 +96,12 @@
       filter: brightness(0.9);
       transition: 0.3s ease;
     }
+
     .payment-icons img:hover {
       transform: scale(1.1);
       filter: brightness(1);
     }
+
     .footer-bottom {
       text-align: center;
       padding: 15px 10px;
@@ -99,11 +109,13 @@
       color: #888;
       font-size: 0.9rem;
     }
+
     .footer-bottom a {
       color: #d4af37;
       text-decoration: none;
     }
   </style>
+
 </head>
 
 <body>
@@ -125,10 +137,13 @@
   </section>
 
   <section class="featured">
-    <h2>Enter Payment Details</h2>
+    <h2 class="section-title" style="margin-bottom: 30px;">Enter Payment Details</h2>
     <form id="mpesa-form">
       <label for="name">Full Name:</label>
-      <input type="text" id="name" name="name" placeholder="John Doe" required>
+      <input type="text" id="name" name="name" placeholder="Robert......!" required>
+
+      <label for="email">Email Address:</label>
+      <input type="email" id="email" name="email" placeholder="robert@example.com" required>
 
       <label for="phone">M-Pesa Number:</label>
       <input type="tel" id="phone" name="phone" placeholder="07XXXXXXXX" required>
@@ -142,33 +157,68 @@
       <button type="button" id="payButton" class="btn">Pay with M-Pesa</button>
     </form>
 
-    <div class="payment-icons">
-      <img src="myImg/socials/mpesa-seeklogo.com.svg" alt="M-Pesa">
-      <img src="myImg/socials/Visa.svg" alt="Visa">
-      <img src="myImg/socials/equitel.png" alt="Equitel">
-      <img src="myImg/socials/mastercard.svg" alt="Mastercard">
-    </div>
-  </section>
+    <footer class="site-footer">
+      <div class="footer-container">
+        <div class="footer-contact">
+          <h3>Contact Us</h3>
+          <p><i class="fas fa-phone-alt"></i> <a href="tel:+254799991551">TechieTown: +2547 99 991 551</a></p>
+          <p><i class="fas fa-phone-alt"></i> <a href="tel:+254799991551">Support: +2547 99 991 551</a></p>
+          <p><i class="fas fa-envelope"></i> <a href="mailto:techiestown@gmail.com">techiestown@gmail.com</a></p>
+          <p><i class="fas fa-map-marker-alt"></i> Downtown Plaza, 2nd Floor, Shop 12</p>
+        </div>
 
-  <div class="footer-bottom">
-    <p>Copyright © 2025 TechieTown. All rights reserved. Designed by 
-      <a href="#">@nainaKe_</a>
-    </p>
-  </div>
+        <div class="footer-links">
+          <h3>Information</h3>
+          <ul>
+            <li><a href="products.html">Our Products</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
+            <li><a href="newsletter.html">About TechieTown</a></li>
+            <li><a href="tracking.html">Track Order</a></li>
+            <li><a href="a.login.html">Admin Portal</a></li>
+          </ul>
+        </div>
 
-  <!-- Include M-Pesa Checkout JS -->
-  <script src="js/mpesa-checkout.js"></script>
+        <div class="footer-social">
+          <h3>Follow Us</h3>
+          <div class="social-icons">
+            <a href="https://www.instagram.com/" target="_blank"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.facebook.com/" target="_blank"><i class="fab fa-facebook"></i></a>
+            <a href="https://www.tiktok.com/" target="_blank"><i class="fab fa-tiktok"></i></a>
+            <a href="https://x.com/home" target="_blank"><i class="fab fa-x-twitter"></i></a>
+          </div>
+          <div class="payment-icons">
+            <img src="myImg/socials/mpesa-seeklogo.com.svg" alt="M-Pesa" class="payment-logo">
+            <img src="myImg/socials/Visa.svg" alt="Visa" class="payment-logo">
+            <img src="myImg/socials/equitel.png" alt="Equitel" class="payment-logo">
+            <img src="myImg/socials/mastercard.svg" alt="Mastercard" class="payment-logo">
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 TechieTown. All rights reserved. Designed by <a href="https://www.instagram.com/naina_ke/"
+            target="_blank">@nainaKe_</a></p>
+      </div>
+    </footer>
 
-  <!-- Initialize form data -->
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const cart = JSON.parse(localStorage.getItem("cart")) || [];
-      let total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-      total = Math.round(Number(total));
+    <!-- Floating Buttons -->
+    <a href="tel:+254799991551" class="floating-call" title="Call Us" aria-label="Call TechieTown">
+      <i class="fas fa-phone-alt"></i>
+    </a>
 
-      const amountInput = document.getElementById("amount");
-      amountInput.value = total > 0 ? total : 1;
-    });
-  </script>
+    <a href="https://wa.me/254799991551?text=Hello%20TechieTown%2C%20I%20need%20some%20assistance"
+      class="floating-whatsapp" title="Chat on WhatsApp" aria-label="WhatsApp TechieTown" target="_blank">
+      <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script src="js/auth.js"></script>
+
+
+
+    <!-- Include M-Pesa Checkout JS -->
+    <script src="js/mpesa-checkout.js"></script>
+
+
 </body>
+
 </html>

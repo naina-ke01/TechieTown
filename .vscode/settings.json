@@ -1,0 +1,6 @@
+{
+    "livePreview.defaultPreviewPath": "/public/thank-you.html",
+    "search.exclude": {
+        "": true
+    }
+}

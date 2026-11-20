@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Product Details | TechieTown</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        .product-detail-container {
+            max-width: 1200px;
+            margin: 120px auto 60px;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+        }
+
+        @media (max-width: 768px) {
+            .product-detail-container {
+                grid-template-columns: 1fr;
+                margin-top: 80px;
+            }
+        }
+
+        .product-image-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .main-image-wrapper {
+            background: #111;
+            border: 2px solid #333;
+            border-radius: 15px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            aspect-ratio: 1;
+            overflow: hidden;
+        }
+
+        .main-image-wrapper img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+
+        .main-image-wrapper img:hover {
+            transform: scale(1.05);
+        }
+
+        .product-info-section {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .product-title {
+            font-size: 2.5rem;
+            color: #d4af37;
+            margin: 0;
+        }
+
+        .product-brand {
+            font-size: 1.1rem;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .product-price {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .product-description {
+            color: #ccc;
+            line-height: 1.8;
+            font-size: 1.1rem;
+            border-top: 1px solid #333;
+            padding-top: 25px;
+        }
+
+        .product-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: #111;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #d4af37;
+        }
+
+        .meta-item {
+            display: flex;
+            justify-content: space-between;
+            color: #999;
+        }
+
+        .meta-item span:last-child {
+            color: #fff;
+            font-weight: 500;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .btn-add-cart {
+            flex: 1;
+            padding: 16px;
+            background: #d4af37;
+            color: #111;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-add-cart:hover:not(:disabled) {
+            background: #c19e34;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-add-cart:disabled {
+            background: #444;
+            color: #888;
+            cursor: not-allowed;
+        }
+
+        .loading-spinner {
+            grid-column: 1/-1;
+            text-align: center;
+            padding: 100px;
+            color: #d4af37;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header (Same as products.html) -->
+    <header class="site-header">
+        <div class="logo">TECHIETOWN</div>
+        <nav>
+            <ul class="nav-links" id="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="products.html">Products</a></li>
+                <li><a href="cart.html">Cart</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+        <div id="authLinks" class="auth-links"></div>
+    </header>
+
+    <div id="cart-toggle" class="cart-icon">
+        🛒 <span id="cart-count">0</span>
+    </div>
+
+    <!-- Mini Cart (Included for consistency) -->
+    <aside id="mini-cart">
+        <div>
+            <h3>Your Cart</h3>
+            <button class="close-cart" aria-label="Close cart">×</button>
+        </div>
+        <ul id="mini-cart-items"></ul>
+        <div class="mini-cart-footer">
+            <div class="cart-total">
+                <span class="total-label">Total:</span>
+                <span id="mini-cart-total">KES 0</span>
+            </div>
+            <a href="checkout.html" class="checkout-btn">Proceed to Checkout</a>
+            <button id="clear-cart">Clear Cart</button>
+        </div>
+    </aside>
+
+    <div class="overlay"></div>
+
+    <main id="product-container">
+        <div class="loading-spinner">
+            <i class="fas fa-spinner fa-spin fa-3x"></i>
+            <p>Loading product details...</p>
+        </div>
+    </main>
+
+    <!-- Related Products Section -->
+    <section class="related-products" style="max-width: 1200px; margin: 60px auto; padding: 0 20px;">
+        <h2 style="color: #d4af37; border-bottom: 2px solid #333; padding-bottom: 15px; margin-bottom: 30px;">Related
+            Products</h2>
+        <div id="related-grid" class="product-grid">
+            <!-- Dynamically populated -->
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-contact">
+                <h3>Contact Us</h3>
+                <p><i class="fas fa-phone-alt"></i> <a href="tel:+254799991551">TechieTown: +2547 99 991 551</a></p>
+                <p><i class="fas fa-phone-alt"></i> <a href="tel:+254799991551">Support: +2547 99 991 551</a></p>
+                <p><i class="fas fa-envelope"></i> <a href="mailto:techiestown@gmail.com">techiestown@gmail.com</a></p>
+                <p><i class="fas fa-map-marker-alt"></i> Downtown Plaza, 2nd Floor, Shop 12</p>
+            </div>
+
+            <div class="footer-links">
+                <h3>Information</h3>
+                <ul>
+                    <li><a href="products.html">Our Products</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                    <li><a href="newsletter.html">About TechieTown</a></li>
+                    <li><a href="tracking.html">Track Order</a></li>
+                    <li><a href="a.login.html">Admin Portal</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-social">
+                <h3>Follow Us</h3>
+                <div class="social-icons">
+                    <a href="https://www.instagram.com/" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.facebook.com/" target="_blank"><i class="fab fa-facebook"></i></a>
+                    <a href="https://www.tiktok.com/" target="_blank"><i class="fab fa-tiktok"></i></a>
+                    <a href="https://x.com/home" target="_blank"><i class="fab fa-x-twitter"></i></a>
+                </div>
+                <div class="payment-icons">
+                    <img src="myImg/socials/mpesa-seeklogo.com.svg" alt="M-Pesa" class="payment-logo">
+                    <img src="myImg/socials/Visa.svg" alt="Visa" class="payment-logo">
+                    <img src="myImg/socials/equitel.png" alt="Equitel" class="payment-logo">
+                    <img src="myImg/socials/mastercard.svg" alt="Mastercard" class="payment-logo">
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 TechieTown. All rights reserved. Designed by <a href="https://www.instagram.com/naina_ke/"
+                    target="_blank">@nainaKe_</a></p>
+        </div>
+    </footer>
+
+    <!-- Floating Buttons -->
+    <a href="tel:+254799991551" class="floating-call" title="Call Us" aria-label="Call TechieTown">
+        <i class="fas fa-phone-alt"></i>
+    </a>
+
+    <a href="https://wa.me/254799991551?text=Hello%20TechieTown%2C%20I%20need%20some%20assistance"
+        class="floating-whatsapp" title="Chat on WhatsApp" aria-label="WhatsApp TechieTown" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+    <script src="js/miniCart.js"></script>
+    <script src="js/product-view.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+
+</html>

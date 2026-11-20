@@ -1,4 +1,3 @@
-// backend/routes/mpesaRoutes.js
 import express from "express";
 import {
   initiateStkPush,
@@ -6,11 +5,12 @@ import {
   queryPaymentStatus,
   getPaymentByCheckout,
 } from "../controllers/mpesaController.js";
+import { protect } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
 // ===== STK Push Endpoint =====
-router.post("/stkpush", initiateStkPush);
+router.post("/stkpush", protect, initiateStkPush);
 
 // ===== M-Pesa Callback (Safaricom POSTs here) =====
 router.post("/callback", mpesaCallback);

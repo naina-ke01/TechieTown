@@ -1,119 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Admin – Payments | TechieTown</title>
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-  />
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Poppins', sans-serif;
-      background-color: #000;
-      color: #fff;
-      display: flex;
-      height: 100vh;
-    }
-    .sidebar {
-      width: 250px;
-      background: linear-gradient(135deg, #111, #222);
-      display: flex;
-      flex-direction: column;
-      padding: 20px;
-      box-shadow: 4px 0 15px rgba(212, 175, 55, 0.2);
-    }
-    .sidebar h2 {
-      color: #d4af37;
-      text-align: center;
-      margin-bottom: 30px;
-    }
-    .sidebar a {
-      text-decoration: none;
-      color: #bbb;
-      padding: 12px 15px;
-      border-radius: 8px;
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      transition: 0.3s;
-    }
-    .sidebar a:hover,
-    .sidebar a.active {
-      background: #d4af37;
-      color: #111;
-    }
-    .sidebar i {
-      margin-right: 10px;
-    }
-    .main-content {
-      flex: 1;
-      background: #111;
-      padding: 30px;
-      overflow-y: auto;
-    }
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 25px;
-    }
-    header h1 {
-      color: #d4af37;
-      font-size: 1.5rem;
-    }
-    .refresh-btn {
-      background: #d4af37;
-      color: #000;
-      padding: 10px 16px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: bold;
-      float: right;
-      margin-bottom: 15px;
-      transition: 0.3s;
-    }
-    .refresh-btn:hover {
-      background: #c19e34;
-      transform: scale(1.03);
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background: #111;
-      border-radius: 8px;
-      overflow: hidden;
-    }
-    th, td {
-      padding: 12px 10px;
-      text-align: left;
-      border-bottom: 1px solid #333;
-    }
-    th {
-      color: #d4af37;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-    tr:hover {
-      background: #1a1a1a;
-    }
-    .status-success {
-      color: #00ff99;
-      font-weight: 500;
-    }
-    .status-failed {
-      color: #ff5555;
-      font-weight: 500;
-    }
-  </style>
+  <link rel="stylesheet" href="../css/admin.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
 
 <body>
+  <!-- Hamburger Menu -->
+  <div class="menu-toggle" id="menuToggle">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
 
-  <aside class="sidebar">
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <aside class="sidebar" id="sidebar">
     <h2>Admin Panel</h2>
     <a href="a.dashboard.html"><i class="fas fa-chart-line"></i> Dashboard</a>
     <a href="a.products.html"><i class="fas fa-box"></i> Products</a>
@@ -125,65 +31,148 @@
 
   <main class="main-content">
     <header>
-      <h1>💳 Payments Panel</h1>
-      <button class="refresh-btn" id="refresh">🔄 Refresh</button>
+      <h1>💳 Payment Management</h1>
+      <button class="btn-logout" id="logoutBtn">Logout</button>
     </header>
 
+    <!-- Payment Statistics -->
+    <div class="payment-stats">
+      <div class="stat-card">
+        <i class="fas fa-receipt fa-2x"></i>
+        <h3 id="totalPayments">0</h3>
+        <p>Total Payments</p>
+      </div>
+      <div class="stat-card">
+        <i class="fas fa-check-circle fa-2x"></i>
+        <h3 id="completedPayments">0</h3>
+        <p>Completed</p>
+      </div>
+      <div class="stat-card stat-revenue">
+        <i class="fas fa-chart-line fa-2x"></i>
+        <h3 id="totalRevenue">KES 0</h3>
+        <p>Total Revenue</p>
+      </div>
+    </div>
+
+    <!-- Filter Controls -->
+    <div class="filter-controls">
+      <div class="filter-group">
+        <label for="filterStatus">Filter by Status:</label>
+        <select id="filterStatus" class="filter-select">
+          <option value="all">All Statuses</option>
+          <option value="Completed">Completed</option>
+          <option value="Pending">Pending</option>
+          <option value="Failed">Failed</option>
+          <option value="Cancelled">Cancelled</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="filterMethod">Filter by Method:</label>
+        <select id="filterMethod" class="filter-select">
+          <option value="all">All Methods</option>
+          <option value="M-Pesa">M-Pesa</option>
+          <option value="Visa">Visa</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="searchPayments">Search:</label>
+        <input type="text" id="searchPayments" placeholder="Search by phone, receipt, or ID..." class="search-input">
+      </div>
+
+      <div class="filter-group" style="margin-left: auto;">
+        <label>&nbsp;</label>
+        <button class="btn" id="refreshBtn">
+          <i class="fas fa-sync-alt"></i> Refresh
+        </button>
+      </div>
+    </div>
+
+    <!-- Payments Table -->
     <table id="paymentsTable">
       <thead>
         <tr>
-          <th>Transaction ID</th>
-          <th>Phone</th>
-          <th>Amount (KES)</th>
-          <th>Date</th>
+          <th>Payment ID</th>
+          <th>Phone Number</th>
+          <th>Amount</th>
+          <th>M-Pesa Receipt</th>
+          <th>Type</th>
           <th>Status</th>
+          <th>Date</th>
+          <th>Actions</th>
         </tr>
       </thead>
-      <tbody>
-        <tr><td colspan="5" style="text-align:center;">Loading transactions...</td></tr>
+      <tbody id="paymentsTableBody">
+        <tr>
+          <td colspan="8" style="text-align:center;color:#d4af37;">🔄 Loading payments...</td>
+        </tr>
       </tbody>
     </table>
   </main>
 
-<script src="../js/admin-dashboard.js" defer></script>
-<script src="/js/adminCheck.js" defer></script>
+  <!-- Payment Details Modal -->
+  <div id="paymentDetailsModal" class="modal">
+    <div class="modal-content modal-large">
+      <span class="close" onclick="closePaymentDetailsModal()">&times;</span>
+      <h2>Payment Details</h2>
+
+      <div class="order-details-grid">
+        <!-- Payment Info -->
+        <div class="details-section">
+          <h3>Payment Information</h3>
+          <p><strong>Payment ID:</strong> <span id="modalPaymentId"></span></p>
+          <p><strong>Phone Number:</strong> <span id="modalPhoneNumber"></span></p>
+          <p><strong>Amount:</strong> <span id="modalAmount" style="color:#d4af37;font-size:1.2em;"></span></p>
+          <p><strong>Status:</strong> <span id="modalStatus" class="status-badge"></span></p>
+          <p><strong>Transaction Type:</strong> <span id="modalTransactionType"></span></p>
+          <p><strong>Created At:</strong> <span id="modalCreatedAt"></span></p>
+        </div>
+
+        <!-- M-Pesa Details -->
+        <div class="details-section">
+          <h3>M-Pesa Transaction Details</h3>
+          <p><strong>Receipt Number:</strong> <span id="modalMpesaReceipt"></span></p>
+          <p><strong>Checkout Request ID:</strong> <span id="modalCheckoutRequestId" style="font-size:0.85em;"></span>
+          </p>
+          <p><strong>Merchant Request ID:</strong> <span id="modalMerchantRequestId" style="font-size:0.85em;"></span>
+          </p>
+          <p><strong>Transaction Date:</strong> <span id="modalTransactionDate"></span></p>
+        </div>
+      </div>
+
+      <!-- Result Info -->
+      <div class="details-section">
+        <h3>Transaction Result</h3>
+        <p><strong>Result Code:</strong> <span id="modalResultCode"></span></p>
+        <p><strong>Result Description:</strong> <span id="modalResultDesc"></span></p>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="../js/admin-common.js"></script>
+  <script type="module" src="../js/admin-payments.js"></script>
 
   <script>
-    const API_BASE = "http://localhost:3000";
+    // Hamburger menu
+    document.addEventListener("DOMContentLoaded", () => {
+      const menuToggle = document.getElementById("menuToggle");
+      const sidebar = document.getElementById("sidebar");
+      const overlay = document.getElementById("sidebarOverlay");
 
-    async function loadPayments() {
-      const tableBody = document.querySelector("#paymentsTable tbody");
-      tableBody.innerHTML = "<tr><td colspan='5' style='text-align:center;'>Loading...</td></tr>";
+      menuToggle.addEventListener("click", () => {
+        sidebar.classList.toggle("active");
+        overlay.classList.toggle("active");
+        menuToggle.classList.toggle("active");
+      });
 
-      try {
-        const res = await fetch(`${API_BASE}/api/payments`);
-        const payments = await res.json();
-
-        if (!payments.length) {
-          tableBody.innerHTML = "<tr><td colspan='5' style='text-align:center;'>No transactions found.</td></tr>";
-          return;
-        }
-
-        tableBody.innerHTML = "";
-        payments.forEach(p => {
-          const row = document.createElement("tr");
-          row.innerHTML = `
-            <td>${p.MpesaReceiptNumber || "-"}</td>
-            <td>${p.phone}</td>
-            <td>${p.amount}</td>
-            <td>${new Date(p.date).toLocaleString()}</td>
-            <td class="${p.status === "Success" ? "status-success" : "status-failed"}">${p.status}</td>
-          `;
-          tableBody.appendChild(row);
-        });
-      } catch (err) {
-        console.error("Error fetching payments:", err);
-        tableBody.innerHTML = "<tr><td colspan='5' style='text-align:center;color:red;'>Error loading data</td></tr>";
-      }
-    }
-
-    document.getElementById("refresh").addEventListener("click", loadPayments);
-    loadPayments();
+      overlay.addEventListener("click", () => {
+        sidebar.classList.remove("active");
+        overlay.classList.remove("active");
+        menuToggle.classList.remove("active");
+      });
+    });
   </script>
 </body>
+
 </html>

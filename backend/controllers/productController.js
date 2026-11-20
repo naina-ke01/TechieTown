@@ -1,32 +1,52 @@
 import Product from "../models/productModel.js";
 import path from "path";
+import asyncHandler from "express-async-handler";
 
-export const getProducts = async (req, res) => {
-  const products = await Product.find();
-  res.json(products);
-};
+export const getProducts = asyncHandler(async (req, res) => {
+  const products = await Product.find().sort({ createdAt: -1 });
+  res.json({ success: true, products });
+});
 
-export const createProduct = async (req, res) => {
+export const getProductById = asyncHandler(async (req, res) => {
+  const product = await Product.findById(req.params.id);
+  if (!product) {
+    res.status(404);
+    throw new Error("Product not found");
+  }
+  res.json({ success: true, product });
+});
+
+export const createProduct = asyncHandler(async (req, res) => {
   const { name, price, brand, category, description, stock } = req.body;
-  const image = req.file ? `/uploads/${req.file.filename}` : null;
+  const image = req.file ? `/uploads/${req.file.filename}` : null; // Adjusted path for frontend access
 
+  // Note: Validation is handled by Mongoose model
   const product = new Product({ name, price, brand, category, description, stock, image });
   const created = await product.save();
-  res.status(201).json(created);
-};
+  res.status(201).json({ success: true, message: "Product created", product: created });
+});
 
-export const updateProduct = async (req, res) => {
+export const updateProduct = asyncHandler(async (req, res) => {
   const product = await Product.findById(req.params.id);
-  if (!product) return res.status(404).json({ message: "Product not found" });
+  if (!product) {
+    res.status(404);
+    throw new Error("Product not found");
+  }
 
   const updates = req.body;
-  if (req.file) updates.image = `/uploads/${req.file.filename}`;
+  if (req.file) updates.image = `/admin/uploads/${req.file.filename}`;
 
   const updated = await Product.findByIdAndUpdate(req.params.id, updates, { new: true });
-  res.json(updated);
-};
+  res.json({ success: true, message: "Product updated", product: updated });
+});
 
-export const deleteProduct = async (req, res) => {
+export const deleteProduct = asyncHandler(async (req, res) => {
+  const product = await Product.findById(req.params.id);
+  if (!product) {
+    res.status(404);
+    throw new Error("Product not found");
+  }
+
   await Product.findByIdAndDelete(req.params.id);
-  res.json({ message: "Product deleted" });
-};
+  res.json({ success: true, message: "Product deleted" });
+});

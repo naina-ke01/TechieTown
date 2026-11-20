@@ -1,149 +1,118 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>TechieTown - User Profile</title>
+  <title>My Account | TechieTown</title>
   <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: #111;
-      color: #fff;
-      padding: 20px;
-      max-width: 800px;
-      margin: auto;
-    }
-
-    h2 {
-      color: #d4af37;
-      margin-bottom: 20px;
-    }
-
-    form {
-      background: #222;
-      padding: 20px;
-      border-radius: 8px;
-      margin-bottom: 30px;
-    }
-
-    input, select {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 15px;
-      border-radius: 6px;
-      border: none;
-    }
-
-    button {
-      background: #d4af37;
-      border: none;
-      padding: 12px 20px;
-      font-weight: bold;
-      cursor: pointer;
-      border-radius: 6px;
-      color: #111;
-      transition: background 0.3s ease;
-    }
-    button:hover {
-      background: #c19e34;
-    }
-
-    ul.address-list {
-      list-style: none;
-      padding: 0;
-    }
-    ul.address-list li {
-      background: #1a1a1a;
-      padding: 15px;
-      border-radius: 8px;
-      margin-bottom: 10px;
-    }
+    .account-page { max-width: 1050px; margin: 45px auto 80px; padding: 0 20px; }
+    .account-heading { margin-bottom: 28px; }
+    .account-heading h1 { color: #d4af37; margin: 0 0 8px; }
+    .account-heading p, .muted { color: #aaa; }
+    .account-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; }
+    .panel { background: #151515; border: 1px solid #333; border-radius: 12px; padding: 24px; }
+    .panel h2 { color: #d4af37; margin: 0 0 18px; }
+    .panel-wide { grid-column: 1 / -1; }
+    .profile-form, .address-form { display: grid; gap: 14px; }
+    .profile-form label, .address-form label { display: grid; gap: 6px; color: #ccc; }
+    .profile-form input, .address-form input { width: 100%; padding: 12px; border: 1px solid #444; border-radius: 7px; background: #222; color: #fff; box-sizing: border-box; }
+    .profile-form input:focus, .address-form input:focus { outline: 1px solid #d4af37; }
+    .account-button { justify-self: start; border: 0; border-radius: 7px; padding: 11px 17px; background: #d4af37; color: #111; font-weight: 700; cursor: pointer; }
+    .account-button:disabled { opacity: .6; cursor: wait; }
+    .address-card, .order-card { background: #202020; border-radius: 8px; padding: 15px; margin: 0 0 12px; }
+    .address-card h3, .order-card h3 { margin: 0 0 6px; color: #fff; }
+    .address-card p, .order-card p { color: #aaa; margin: 7px 0; overflow-wrap: anywhere; }
+    .text-button { color: #ff9a9a; border: 0; background: none; padding: 5px 0; cursor: pointer; }
+    .button-link { display: inline-block; margin-top: 6px; color: #111; background: #d4af37; padding: 8px 13px; border-radius: 6px; font-weight: 700; text-decoration: none; }
+    .notice { margin: 0 0 20px; padding: 12px 14px; border-radius: 7px; background: #222; }
+    .notice.success { border: 1px solid #90ee90; color: #adf0ad; }
+    .notice.error { border: 1px solid #ff6b6b; color: #ff9a9a; }
+    @media (max-width: 700px) { .account-grid { grid-template-columns: 1fr; } .panel-wide { grid-column: auto; } }
   </style>
 </head>
+
 <body>
+  <header class="site-header">
+    <div class="logo">TECHIETOWN</div>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="cart.html">Cart</a></li>
+        <li><a href="tracking.html">Track Order</a></li>
+      </ul>
+    </nav>
+    <div id="authLinks" class="auth-links"></div>
+  </header>
 
-<div id="overlay" class="overlay"></div>
+  <main class="account-page">
+    <div class="account-heading">
+      <h1>My account</h1>
+      <p>Manage your personal information, saved delivery addresses, and order history.</p>
+    </div>
+    <p id="profile-message" class="notice" role="status" hidden></p>
 
-  <h2>Your Saved Addresses</h2>
-  <ul class="address-list" id="addressList">
-    <!-- Address items will be injected here -->
-  </ul>
+    <div class="account-grid">
+      <section class="panel">
+        <h2>Account settings</h2>
+        <form id="profile-form" class="profile-form">
+          <label for="profile-name">Full name
+            <input id="profile-name" name="name" autocomplete="name" required>
+          </label>
+          <label for="profile-email">Email address
+            <input id="profile-email" name="email" type="email" autocomplete="email" required>
+          </label>
+          <label for="profile-phone">Phone number
+            <input id="profile-phone" name="phoneNumber" type="tel" autocomplete="tel">
+          </label>
+          <button type="submit" class="account-button">Save settings</button>
+        </form>
+      </section>
 
-  <h2>Add New Address</h2>
-  <form id="addressForm">
-    <input type="text" id="label" placeholder="Label (e.g., Home, Work)" required />
-    <input type="text" id="street" placeholder="Street Address" required />
-    <input type="text" id="city" placeholder="City" required />
-    <input type="text" id="postalCode" placeholder="Postal Code" required />
-    <input type="text" id="country" placeholder="Country" required />
-    <button type="submit">Save Address</button>
-  </form>
+      <section class="panel">
+        <h2>Saved addresses</h2>
+        <div id="saved-addresses" aria-live="polite">
+          <p class="muted">Loading saved addresses…</p>
+        </div>
+        <form id="address-form" class="address-form">
+          <label for="address-label">Label
+            <input id="address-label" placeholder="Home, Work" required>
+          </label>
+          <label for="address-street">Street address
+            <input id="address-street" autocomplete="street-address" required>
+          </label>
+          <label for="address-city">City
+            <input id="address-city" required>
+          </label>
+          <label for="address-postal">Postal code
+            <input id="address-postal" autocomplete="postal-code" required>
+          </label>
+          <label for="address-country">Country
+            <input id="address-country" autocomplete="country-name" required>
+          </label>
+          <button type="submit" class="account-button">Add address</button>
+        </form>
+      </section>
 
-  <script>
-    const token = localStorage.getItem('token');
-    if (!token) {
-      alert('Please login first!');
-      window.location.href = '/login.html';
-    }
+      <section class="panel panel-wide">
+        <h2>Order history</h2>
+        <div id="profile-orders" aria-live="polite">
+          <p class="muted">Loading your order history…</p>
+        </div>
+      </section>
+    </div>
+  </main>
 
-    async function fetchProfile() {
-      const res = await fetch('/profile', {
-        headers: { 'Authorization': `Bearer ${token}` },
-      });
-      if (res.ok) {
-        const user = await res.json();
-        renderAddresses(user.addresses);
-      } else {
-        alert('Failed to load profile');
-      }
-    }
-
-    function renderAddresses(addresses) {
-      const list = document.getElementById('addressList');
-      list.innerHTML = '';
-      if (addresses.length === 0) {
-        list.innerHTML = '<li>No addresses saved yet.</li>';
-        return;
-      }
-      addresses.forEach(addr => {
-        list.innerHTML += `
-          <li>
-            <strong>${addr.label}</strong><br />
-            ${addr.street}, ${addr.city}<br />
-            ${addr.postalCode}, ${addr.country}
-          </li>`;
-      });
-    }
-
-    document.getElementById('addressForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const label = e.target.label.value.trim();
-      const street = e.target.street.value.trim();
-      const city = e.target.city.value.trim();
-      const postalCode = e.target.postalCode.value.trim();
-      const country = e.target.country.value.trim();
-
-      const res = await fetch('/profile/address', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ label, street, city, postalCode, country }),
-      });
-
-      if (res.ok) {
-        const addresses = await res.json();
-        renderAddresses(addresses);
-        e.target.reset();
-        alert('Address saved successfully!');
-      } else {
-        alert('Failed to save address');
-      }
-    });
-
-    fetchProfile();
-  </script>
+  <footer class="site-footer">
+    <div class="footer-bottom">
+      <p>Need help? <a href="contact.html">Contact TechieTown</a></p>
+    </div>
+  </footer>
+  <script src="js/auth.js"></script>
+  <script src="js/profile.js"></script>
 </body>
+
 </html>

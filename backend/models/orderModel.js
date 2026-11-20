@@ -15,11 +15,24 @@ const orderSchema = new mongoose.Schema(
       },
     ],
     totalAmount: { type: Number, required: true, min: 0 },
+    shippingAddress: { type: String, trim: true },
+    paymentMethod: {
+      type: String,
+      enum: ["M-Pesa", "Visa"],
+      default: "M-Pesa",
+    },
     paymentStatus: {
       type: String,
       enum: ["Pending", "Paid", "Failed"],
       default: "Pending",
     },
+    fulfillmentStatus: {
+      type: String,
+      enum: ["Pending", "Processing", "Shipped", "Delivered", "Cancelled"],
+      default: "Pending",
+    },
+    trackingNumber: { type: String, trim: true },
+    estimatedDelivery: { type: Date },
   },
   { timestamps: true }
 );

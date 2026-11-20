@@ -5,6 +5,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import Payment from "../models/paymentModel.js";
+import Order from "../models/orderModel.js";
 import logger from "../utils/logger.js";
 
 dotenv.config();
@@ -14,13 +15,13 @@ const __dirname = path.dirname(__filename);
 
 // Ensure logs directory exists
 const logsDir = path.join(__dirname, "../logs");
-if (!fs.existsSync(logsDir)) fs.mkdirSync(logsDir);
+if (!fs.existsSync(logsDir)) fs.mkdirSync(logsDir, { recursive: true });
 const CALLBACK_FILE = path.join(logsDir, "mpesa-callbacks.json");
 
 // ===== Format Phone Number =====
 function formatPhoneNumber(phone) {
   phone = phone.replace(/\D/g, ""); // Remove non-digits
-  
+
   if (phone.startsWith("0")) {
     phone = "254" + phone.substring(1);
   } else if (phone.startsWith("7") || phone.startsWith("1")) {
@@ -28,12 +29,12 @@ function formatPhoneNumber(phone) {
   } else if (phone.startsWith("+254")) {
     phone = phone.substring(1);
   }
-  
+
   // Validate Safaricom number
   if (!/^254[71]\d{8}$/.test(phone)) {
     throw new Error(`Invalid Safaricom number: ${phone}`);
   }
-  
+
   return phone;
 }
 
@@ -65,26 +66,35 @@ function generatePassword() {
     .toISOString()
     .replace(/[^0-9]/g, "")
     .slice(0, 14);
-  
+
   const password = Buffer.from(
     `${process.env.MPESA_SHORTCODE}${process.env.MPESA_PASSKEY}${timestamp}`
   ).toString("base64");
-  
+
   return { password, timestamp };
 }
 
 // ===== Initiate STK Push =====
 export const initiateStkPush = async (req, res) => {
   try {
-    let { phone, amount } = req.body;
+    let { phone, orderId } = req.body;
 
     // Validate input
-    if (!phone || !amount) {
+    if (!phone || !orderId) {
       return res.status(400).json({
         success: false,
-        message: "Phone number and amount are required",
+        message: "Phone number and order ID are required",
       });
     }
+
+    const order = await Order.findById(orderId);
+    if (!order) {
+      return res.status(404).json({ success: false, message: "Order not found" });
+    }
+    if (order.user.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ success: false, message: "You are not authorized to pay for this order" });
+    }
+    let amount = Math.ceil(order.totalAmount);
 
     // Format phone number
     try {
@@ -114,8 +124,7 @@ export const initiateStkPush = async (req, res) => {
     const { password, timestamp } = generatePassword();
 
     // Build callback URL
-    const callbackUrl = process.env.MPESA_CALLBACK_URL || 
-      process.env.BASE_URL + "/api/payments/callback" ||
+    const callbackUrl = process.env.MPESA_CALLBACK_URL ||
       process.env.NGROK_URL + "/api/payments/callback" ||
       `${req.protocol}://${req.get("host")}/api/payments/callback`;
 
@@ -154,18 +163,23 @@ export const initiateStkPush = async (req, res) => {
 
     // Save payment to database
     try {
-      await Payment.create({
+      const paymentData = {
         phoneNumber: phone,
         amount: amount,
         checkoutRequestId: response.data.CheckoutRequestID,
         merchantRequestId: response.data.MerchantRequestID,
         status: "Pending",
         transactionType: "STK_PUSH",
-      });
+      };
+
+      paymentData.orderId = order._id;
+      paymentData.user = req.user._id;
+      logger.info(`📦 Payment linked to order: ${order._id}`);
+
+      await Payment.create(paymentData);
       logger.info("💾 Payment record saved to database");
     } catch (dbError) {
       logger.error("⚠️ Failed to save payment to DB: " + dbError.message);
-      // Don't fail the request if DB save fails
     }
 
     res.json({
@@ -181,10 +195,10 @@ export const initiateStkPush = async (req, res) => {
     });
   } catch (error) {
     logger.error("❌ STK Push Error: " + (error.response?.data || error.message));
-    
-    const errorMessage = error.response?.data?.errorMessage || 
-                        error.response?.data?.ResponseDescription || 
-                        error.message;
+
+    const errorMessage = error.response?.data?.errorMessage ||
+      error.response?.data?.ResponseDescription ||
+      error.message;
 
     res.status(500).json({
       success: false,
@@ -194,12 +208,39 @@ export const initiateStkPush = async (req, res) => {
   }
 };
 
-// ===== M-Pesa Callback Handler =====
+// ===== M-Pesa Callback Handler (FIXED - NO 502) =====
 export const mpesaCallback = async (req, res) => {
   try {
     logger.info("📥 M-Pesa Callback Received");
     logger.info("Callback Body: " + JSON.stringify(req.body, null, 2));
 
+    // ✅ CRITICAL: Respond IMMEDIATELY to Safaricom (prevents 502)
+    res.status(200).json({
+      ResultCode: 0,
+      ResultDesc: "Callback received successfully",
+    });
+
+    // Process callback asynchronously (don't block response)
+    setImmediate(() => {
+      processCallback(req.body);
+    });
+
+  } catch (error) {
+    logger.error("❌ Callback Error: " + error.message);
+
+    // ✅ Still send 200 OK even on error (prevents 502)
+    if (!res.headersSent) {
+      res.status(200).json({
+        ResultCode: 0,
+        ResultDesc: "Callback received",
+      });
+    }
+  }
+};
+
+// ===== Process Callback Asynchronously =====
+async function processCallback(callbackData) {
+  try {
     // Save callback to file for debugging
     let callbacks = [];
     if (fs.existsSync(CALLBACK_FILE)) {
@@ -212,16 +253,17 @@ export const mpesaCallback = async (req, res) => {
 
     callbacks.push({
       timestamp: new Date().toISOString(),
-      data: req.body,
+      data: callbackData,
     });
 
     fs.writeFileSync(CALLBACK_FILE, JSON.stringify(callbacks, null, 2));
+    logger.info("💾 Callback saved to file");
 
     // Extract callback data
-    const { Body } = req.body;
+    const { Body } = callbackData;
     if (!Body || !Body.stkCallback) {
       logger.warn("⚠️ Invalid callback structure");
-      return res.json({ ResultCode: 0, ResultDesc: "Accepted" });
+      return;
     }
 
     const { stkCallback } = Body;
@@ -268,25 +310,94 @@ export const mpesaCallback = async (req, res) => {
         { new: true, upsert: true }
       );
       logger.info("💾 Payment updated in database: " + payment._id);
+
+      // If payment is completed, update the linked order's payment status
+      if (ResultCode === 0 && payment.orderId) {
+        try {
+          await Order.findByIdAndUpdate(
+            payment.orderId,
+            { paymentStatus: "Paid", fulfillmentStatus: "Processing" },
+            { new: true }
+          );
+          logger.info(`✅ Order ${payment.orderId} payment status updated to Paid`);
+        } catch (orderError) {
+          logger.error("❌ Failed to update order payment status: " + orderError.message);
+        }
+      } else if (ResultCode === 0 && !payment.orderId) {
+        // If no orderId is linked, try to find order by matching amount and user
+        // This is a fallback for cases where orderId wasn't set during payment creation
+        try {
+          const user = payment.user;
+          if (user && payment.amount) {
+            // Try to find a pending order with matching amount and user
+            const order = await Order.findOne({
+              user: user,
+              totalAmount: payment.amount,
+              paymentStatus: "Pending"
+            }).sort({ createdAt: -1 }); // Get most recent matching order
+
+            if (order) {
+              await Order.findByIdAndUpdate(
+                order._id,
+                { paymentStatus: "Paid", fulfillmentStatus: "Processing" },
+                { new: true }
+              );
+              // Also link the payment to the order
+              await Payment.findByIdAndUpdate(
+                payment._id,
+                { orderId: order._id },
+                { new: true }
+              );
+              logger.info(`✅ Order ${order._id} payment status updated to Paid (matched by amount and user)`);
+            } else {
+              // If no exact match, try matching by amount only (within 1 KES tolerance)
+              const orderByAmount = await Order.findOne({
+                user: user,
+                totalAmount: { $gte: payment.amount - 1, $lte: payment.amount + 1 },
+                paymentStatus: "Pending"
+              }).sort({ createdAt: -1 });
+
+              if (orderByAmount) {
+                await Order.findByIdAndUpdate(
+                  orderByAmount._id,
+                  { paymentStatus: "Paid", fulfillmentStatus: "Processing" },
+                  { new: true }
+                );
+                await Payment.findByIdAndUpdate(
+                  payment._id,
+                  { orderId: orderByAmount._id },
+                  { new: true }
+                );
+                logger.info(`✅ Order ${orderByAmount._id} payment status updated to Paid (matched by approximate amount)`);
+              }
+            }
+          }
+        } catch (matchError) {
+          logger.error("❌ Failed to match and update order: " + matchError.message);
+        }
+      } else if (ResultCode !== 0 && payment.orderId) {
+        // If payment failed, update order status to Failed
+        try {
+          await Order.findByIdAndUpdate(
+            payment.orderId,
+            { paymentStatus: "Failed" },
+            { new: true }
+          );
+          logger.info(`⚠️ Order ${payment.orderId} payment status updated to Failed`);
+        } catch (orderError) {
+          logger.error("❌ Failed to update order payment status: " + orderError.message);
+        }
+      }
     } catch (dbError) {
       logger.error("❌ Failed to update payment in DB: " + dbError.message);
     }
 
-    // Acknowledge receipt to Safaricom
-    res.json({
-      ResultCode: 0,
-      ResultDesc: "Callback received successfully",
-    });
   } catch (error) {
-    logger.error("❌ Callback Error: " + error.message);
-    res.status(500).json({
-      ResultCode: 1,
-      ResultDesc: "Callback processing failed",
-    });
+    logger.error("❌ Process Callback Error: " + error.message);
   }
-};
+}
 
-// ===== Query Payment Status from M-Pesa =====
+// ===== Query Payment Status =====
 export const queryPaymentStatus = async (req, res) => {
   try {
     const { checkoutRequestId } = req.params;

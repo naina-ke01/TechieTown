@@ -1,17 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <title>Admin Login | TechieTown</title>
-  <!-- Link to the consolidated admin.css you provided -->
+
   <link rel="stylesheet" href="css/admin.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
 </head>
+
 <body class="admin-login">
-  <!-- Login container matches the updated admin.css (login-container + login-box) -->
+
   <div class="login-container">
+
     <div class="login-box" role="region" aria-labelledby="login-title">
-      <a href="index.html" class="back-button" title="Back to Home" aria-label="Back to Home">&#8592;</a>
+      <a href="index.html" class="back-button" title="Back to Home" aria-label="Back to Home">
+        <i class="fas fa-home"></i>
+      </a>
 
       <h1 id="login-title">TechieTown Admin</h1>
       <p class="subtitle">Sign in to manage products, orders and settings</p>
@@ -19,26 +29,13 @@
       <form id="loginForm" class="login-form" novalidate>
         <div class="form-group">
           <label for="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            placeholder="you@techietown.com"
-            required
-            autocomplete="email"
-          />
+          <input type="email" id="email" name="email" placeholder="you@techietown.com" required autocomplete="email" />
         </div>
 
         <div class="form-group">
           <label for="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            placeholder="Your password"
-            required
-            autocomplete="current-password"
-          />
+          <input type="password" id="password" name="password" placeholder="Your password" required
+            autocomplete="current-password" />
         </div>
 
         <button type="submit" id="loginBtn" class="btn-login">Login</button>
@@ -46,11 +43,30 @@
         <div id="message" class="error-message" aria-live="polite"></div>
         <div id="loading" class="loading-message" style="display:none;" aria-hidden="true">Logging in…</div>
       </form>
-
     </div>
   </div>
 
-  <!-- Your existing login script (keeps behavior) -->
   <script src="js/adminLogin.js" defer></script>
+
+ <!-- Floating Buttons -->
+  <a href="tel:+254799991551" class="floating-call" title="Call Us" aria-label="Call TechieTown">
+    <i class="fas fa-phone-alt"></i>
+  </a>
+
+  <a href="https://wa.me/254799991551?text=Hello%20TechieTown%2C%20I%20need%20some%20assistance"
+    class="floating-whatsapp" title="Chat on WhatsApp" aria-label="WhatsApp TechieTown" target="_blank">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+  
+  <!-- Scripts -->
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+  <!-- External JS Files -->
+  <script src="js/miniCart.js"></script>
+  <script src="js/ViewModal.js"></script>
+
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <script src="js/auth.js"></script>
 </body>
+
 </html>

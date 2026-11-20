@@ -16,9 +16,13 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
       trim: true,
     },
+    phoneNumber: {
+      type: String,
+      trim: true,
+    },
     password: {
       type: String,
-      required: [true, "Password is required"],
+      required: function () { return this.role === 'admin'; },
       minlength: 6,
     },
     role: {

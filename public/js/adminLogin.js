@@ -1,73 +1,54 @@
-// public/js/adminLogin.js
-
 document.addEventListener("DOMContentLoaded", () => {
   const loginForm = document.getElementById("loginForm");
-  const messageBox = document.getElementById("message");
-  const loadingBox = document.getElementById("loading");
-
-  if (!loginForm) {
-    console.error("❌ Admin login form not found");
-    return;
-  }
+  const loginBtn = document.getElementById("loginBtn");
+  const messageDiv = document.getElementById("message");
+  const loadingDiv = document.getElementById("loading");
 
   loginForm.addEventListener("submit", async (e) => {
     e.preventDefault();
+    messageDiv.textContent = "";
+    loadingDiv.style.display = "block";
 
-    const email = document.getElementById("email")?.value.trim();
-    const password = document.getElementById("password")?.value;
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
 
     if (!email || !password) {
-      messageBox.textContent = "Please enter both email and password.";
-      messageBox.className = "error-message";
+      messageDiv.textContent = "Please enter email and password.";
+      loadingDiv.style.display = "none";
       return;
     }
 
-    // Reset messages
-    messageBox.textContent = "";
-    loadingBox.style.display = "block";
-    loadingBox.textContent = "Logging in…";
-
     try {
-      const response = await fetch("/api/admin/login", {
+      const res = await fetch("/api/admin/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ email, password })
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
       });
 
-      const data = await response.json();
+      const data = await res.json();
+      console.log("📥 Login Response Data:", data);
+      loadingDiv.style.display = "none";
 
-      if (!response.ok) {
-        throw new Error(data.message || "Login failed");
+      if (!res.ok) {
+        console.error("❌ Login Failed:", data.message);
+        messageDiv.textContent = data.message || "Login failed";
+        return;
       }
 
-      // ✅ Store token and user
-      localStorage.setItem("adminToken", data.token);
+      if (!data.token) {
+        console.warn("⚠️ Token missing in login response!");
+      }
+
+      // Save user in localStorage (or session) for dashboard access
       localStorage.setItem("adminUser", JSON.stringify(data.user));
-
-      console.log("✅ Admin login successful");
-
-      loadingBox.textContent = "Login successful! Redirecting…";
-      loadingBox.style.backgroundColor = "#1a2a1a";
-
-      // Redirect after short delay
-      setTimeout(() => {
-        window.location.href = "/admin/a.dashboard.html";
-      }, 1200);
-
-    } catch (error) {
-      console.error("❌ Login error:", error);
-      messageBox.textContent = `Login failed: ${error.message}`;
-      messageBox.className = "error-message";
-    } finally {
-      loadingBox.style.display = "none";
+      localStorage.setItem("isAdminLoggedIn", "true");
+      localStorage.setItem("adminToken", data.token); // Save the token for API requests
+      // Redirect to dashboard
+      window.location.href = '/admin/a.dashboard.html';
+    } catch (err) {
+      console.error("❌ Login error:", err);
+      messageDiv.textContent = "Login failed. Please try again.";
+      loadingDiv.style.display = "none";
     }
   });
 });
-
-// Optional auto-redirect if already logged in
-const token = localStorage.getItem("adminToken");
-if (token && window.location.pathname.includes("a.login.html")) {
-  window.location.href = "/admin/a.dashboard.html";
-}

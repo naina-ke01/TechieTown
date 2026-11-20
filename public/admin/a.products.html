@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
+  <link rel="stylesheet" href="../css/admin.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>TechieTown Admin - Products</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
@@ -14,6 +16,7 @@
       display: flex;
       height: 100vh;
     }
+
     .sidebar {
       width: 250px;
       background: linear-gradient(135deg, #111, #222);
@@ -22,11 +25,13 @@
       padding: 20px;
       box-shadow: 4px 0 15px rgba(212, 175, 55, 0.2);
     }
+
     .sidebar h2 {
       color: #d4af37;
       text-align: center;
       margin-bottom: 30px;
     }
+
     .sidebar a {
       text-decoration: none;
       color: #bbb;
@@ -37,29 +42,36 @@
       align-items: center;
       transition: 0.3s;
     }
-    .sidebar a:hover, .sidebar a.active {
+
+    .sidebar a:hover,
+    .sidebar a.active {
       background: #d4af37;
       color: #111;
     }
+
     .sidebar i {
       margin-right: 10px;
     }
+
     .main-content {
       flex: 1;
       background: #111;
       padding: 30px;
       overflow-y: auto;
     }
+
     header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 25px;
     }
+
     header h1 {
       color: #d4af37;
       font-size: 1.5rem;
     }
+
     table {
       width: 100%;
       border-collapse: collapse;
@@ -67,15 +79,19 @@
       border-radius: 10px;
       overflow: hidden;
     }
-    table th, table td {
+
+    table th,
+    table td {
       padding: 12px;
       text-align: left;
       border-bottom: 1px solid #333;
     }
+
     table th {
       background: #222;
       color: #d4af37;
     }
+
     .btn {
       background: #d4af37;
       color: #111;
@@ -87,18 +103,30 @@
       transition: 0.3s;
       margin-left: 10px;
     }
+
     .btn:hover {
       background: #c19e34;
     }
+
     .actions {
       display: flex;
       gap: 10px;
     }
   </style>
 </head>
-<body>
 
-  <aside class="sidebar">
+<body>
+  <!-- Hamburger Menu Toggle -->
+  <div class="menu-toggle" id="menuToggle">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+
+  <!-- Overlay for mobile -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <aside class="sidebar" id="sidebar">
     <h2>Admin Panel</h2>
     <a href="a.dashboard.html"><i class="fas fa-chart-line"></i> Dashboard</a>
     <a href="a.products.html" class="active"><i class="fas fa-box"></i> Products</a>
@@ -111,18 +139,19 @@
   <main class="main-content">
     <header>
       <h1>Products Management</h1>
-      <button class="btn">Logout</button>
+      <button id="logoutBtn" class="btn-logout">Logout</button>
     </header>
 
-    <button class="btn" onclick="location.href='product-add.html'"><i class="fas fa-plus">
-    </i> Add New Product</button>
+    <button class="btn" onclick="openAddModal()"><i class="fas fa-plus">
+      </i> Add New Product</button>
 
 
     <table>
       <br>
       <thead>
         <tr>
-          <th>Product ID</th>
+          <th>ID</th>
+          <th>Image</th>
           <th>Name</th>
           <th>Category</th>
           <th>Price (KES)</th>
@@ -130,36 +159,94 @@
           <th>Actions</th>
         </tr>
       </thead>
-      <tbody id="products-table-body">
+      <tbody id="productsTableBody">
         <tr>
-          <td>001</td>
-          <td>Wireless Mouse</td>
-          <td>Accessories</td>
-          <td>1,500</td>
-          <td>25</td>
-          <td class="actions">
-            <button class="btn" onclick="editProduct('001')"><i class="fas fa-edit"></i></button>
-            <button class="btn" onclick="deleteProduct('001')"><i class="fas fa-trash"></i></button>
-          </td>
+          <td colspan="7" style="text-align:center;color:#d4af37;">🔄 Loading products...</td>
         </tr>
       </tbody>
     </table>
   </main>
 
-<script src="../js/admin-dashboard.js" defer></script>
-<script src="/js/adminCheck.js" defer></script>
+  <!-- Product Add/Edit Modal -->
+  <div id="productModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <h2 id="modalTitle">Add New Product</h2>
 
+      <form id="productForm" onsubmit="saveProduct(event)">
+        <div class="form-group">
+          <label for="productName">Product Name *</label>
+          <input type="text" id="productName" required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="productPrice">Price (KES) *</label>
+            <input type="number" id="productPrice" min="0" step="0.01" required>
+          </div>
+
+          <div class="form-group">
+            <label for="productStock">Stock</label>
+            <input type="number" id="productStock" min="0" value="0">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="productCategory">Category</label>
+            <input type="text" id="productCategory" placeholder="e.g., Smartphones, Laptops">
+          </div>
+
+          <div class="form-group">
+            <label for="productBrand">Brand</label>
+            <input type="text" id="productBrand" placeholder="e.g., Samsung, Apple">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="productDescription">Description</label>
+          <textarea id="productDescription" rows="3"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="productImage">Product Image</label>
+          <input type="file" id="productImage" accept="image/*" onchange="previewImage(event)">
+          <img id="imagePreview" style="display:none; max-width:200px; margin-top:10px; border-radius:8px;">
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Save Product</button>
+          <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script type="module" src="../js/admin-common.js"></script>
+  <script type="module" src="../js/admin-products.js"></script>
+
+  <!-- Hamburger menu script -->
   <script>
-    function editProduct(id) {
-      alert('Edit product ' + id);
+    document.addEventListener("DOMContentLoaded", () => {
+      const menuToggle = document.getElementById("menuToggle");
+      const sidebar = document.getElementById("sidebar");
+      const overlay = document.getElementById("sidebarOverlay");
 
-    }
-    function deleteProduct(id) {
-      if(confirm('Are you sure you want to delete product ' + id + '?')) {
-        alert('Product deleted');
+      if (menuToggle && sidebar && overlay) {
+        menuToggle.addEventListener("click", () => {
+          sidebar.classList.toggle("active");
+          overlay.classList.toggle("active");
+          menuToggle.classList.toggle("active");
+        });
 
+        overlay.addEventListener("click", () => {
+          sidebar.classList.remove("active");
+          overlay.classList.remove("active");
+          menuToggle.classList.remove("active");
+        });
       }
-    }
+    });
   </script>
 </body>
+
 </html>

@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>TechieTown</title>
 
-  <!-- Styles -->
   <link rel="stylesheet" href="css/style.css" />
-  <link 
-    rel="stylesheet" 
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-  />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
 </head>
 
 <body>
@@ -19,98 +19,140 @@
   <header class="site-header">
     <div class="logo">TECHIETOWN</div>
 
-    <!-- Hamburger Menu -->
-    <div
-      class="menu-toggle"
-      id="menu-toggle"
-      role="button"
-      aria-label="Toggle navigation menu"
-      aria-expanded="false"
-      tabindex="0"
-    >
+    <!-- Hamburger  -->
+    <div class="menu-toggle" id="menu-toggle" role="button" aria-label="Toggle navigation menu" aria-expanded="false"
+      tabindex="0">
       <span></span>
       <span></span>
       <span></span>
       <span></span>
     </div>
 
-
     <nav>
       <ul class="nav-links" id="nav-links">
-        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="index.html">Home</a></li>
         <li><a href="products.html">Products</a></li>
         <li><a href="cart.html">Cart</a></li>
         <li><a href="contact.html">Contact</a></li>
       </ul>
-
-      <!-- Mini Cart Icon -->
-      <div class="cart-icon" id="cart-toggle">
-        🛒 <span id="cart-count">0</span>
-      </div>
     </nav>
 
-    <!-- Mini Cart -->
-    <aside id="mini-cart" class="mini-cart">
-      <h3>Your Cart</h3>
-      <ul id="mini-cart-items"></ul>
-      <p id="mini-cart-total">Total: KES 0</p>
-
-      <div class="mini-cart-actions">
-        <button id="clear-cart" class="btn clear-btn">Clear Cart</button>
-        <a href="cart.html" class="checkout-btn">Proceed to Checkout</a>
-      </div>
-    </aside>
+    <div id="authLinks" class="auth-links"></div>
   </header>
 
- <div id="overlay" class="overlay"></div>
+  <div id="cart-toggle" class="cart-icon">
+    🛒 <span id="cart-count">0</span>
+  </div>
+
+  <!-- Mini Cart -->
+  <aside id="mini-cart">
+    <div>
+      <h3>Your Cart</h3>
+      <button class="close-cart" aria-label="Close cart">×</button>
+    </div>
+    <ul id="mini-cart-items"></ul>
+    <div class="mini-cart-footer">
+      <div class="cart-total">
+        <span class="total-label">Total:</span>
+        <span id="mini-cart-total">KES 0</span>
+      </div>
+      <a href="checkout.html" class="checkout-btn">Proceed to Checkout</a>
+      <button id="clear-cart">Clear Cart</button>
+    </div>
+  </aside>
+
+  <div class="overlay"></div>
 
 
   <!-- Hero Section -->
   <main>
     <section class="hero">
-      <h1>Discover the Latest Tech</h1>
-      <p>Luxury electronics curated for you</p>
-      <a href="products.html" class="btn">Shop Now</a>
+      <div class="hero-content">
+        <h1 class="gold-gradient-text">Master Your Tech</h1>
+        <p>Curating the world's most sophisticated electronics for the modern connoisseur. Experience luxury in every
+          detail.</p>
+        <div class="hero-btns">
+          <a href="products.html" class="btn">Explore Collection</a>
+          <a href="contact.html" class="btn btn-outline"
+            style="background: transparent; border: 1px solid var(--primary-gold); color: var(--primary-gold); margin-left: 15px;">Get
+            Support</a>
+        </div>
+      </div>
     </section>
 
     <!-- Featured Section -->
     <section class="featured">
-
-      <!-- Product Modal -->
-      <div class="modal" id="productModal">
-        <div class="modal-content">
-          <button class="close-btn" onclick="closeModal()">&times;</button>
-          <h2 id="modalTitle"></h2>
-          <img id="mainImage" src="" alt="Product Image" />
-          <div class="thumbnail-group" id="thumbnailGroup"></div>
-        </div>
-      </div>
-
-      <h2>Featured Products</h2>
+      <h2 class="section-title">Featured Selection</h2>
 
       <div class="product-grid">
         <div class="product-card">
-          <img src="myImg/Noise Cancelling Headphones.jpg" alt="Noise Cancelling Headphones" onclick="openModal(0)">
-          <h3>Noise Cancelling Headphones</h3>
-          <a href="products.html" class="btn" data-name="Noise Cancelling Headphones" data-price="29900">Accessories</a>
+          <div class="card-image">
+            <img src="myImg/Noise Cancelling Headphones.jpg" alt="Noise Cancelling Headphones" onclick="openModal(0)">
+          </div>
+          <h3>Premium Noise Cancelling</h3>
+          <p class="price">KES 29,900</p>
+          <a href="products.html" class="btn">View Details</a>
         </div>
 
         <div class="product-card">
-          <img src="myImg/fold phones.jpg" alt="Fold Phones" onclick="openModal(1)">
-          <h3>Samsung Fold Z/Flip</h3>
-          <a href="products.html" class="btn" data-name="Fold Phones" data-price="12000">Mobile Phones</a>
+          <div class="card-image">
+            <img src="myImg/fold phones.jpg" alt="Fold Phones" onclick="openModal(1)">
+          </div>
+          <h3>Samsung Galaxy Fold</h3>
+          <p class="price">KES 120,000</p>
+          <a href="products.html" class="btn">View Details</a>
         </div>
 
         <div class="product-card">
-          <img src="myImg/4K Action Camera.jpg" alt="4K Action Camera" onclick="openModal(2)">
-          <h3>4K Action Camera</h3>
-          <a href="products.html" class="btn" data-name="4K Action Camera" data-price="60000">Camera</a>
+          <div class="card-image">
+            <img src="myImg/4K Action Camera.jpg" alt="4K Action Camera" onclick="openModal(2)">
+          </div>
+          <h3>Ultra 4K Action Cam</h3>
+          <p class="price">KES 60,000</p>
+          <a href="products.html" class="btn">View Details</a>
         </div>
 
         <div class="product-card">
-          <img src="myImg/Drone Pro X.jpg" alt="Drone Pro X" onclick="openModal(3)">
-          <h3>Drone Pro X</h3>
-          <a href="products.html" class="btn" data-name="Drone Pro X" data-price="105555">Drones</a>
+          <div class="card-image">
+            <img src="myImg/Drone Pro X.jpg" alt="Drone Pro X" onclick="openModal(3)">
+          </div>
+          <h3>Pro X Stealth Drone</h3>
+          <p class="price">KES 105,555</p>
+          <a href="products.html" class="btn">View Details</a>
+        </div>
+      </div>
+    </section>
+
+    <h4>see more</h4>
+
+    <!-- Features Bar -->
+    <section class="features-bar">
+      <div class="feature-item">
+        <i class="fas fa-truck"></i>
+        <div class="feature-content">
+          <h4>Delivery within Nairobi</h4>
+          <p>CBD Charges Ksh. 100/=</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <i class="fas fa-mobile-alt"></i>
+        <div class="feature-content">
+          <h4>Lipa Na Mpesa</h4>
+          <p>Secure mode of payment everyday.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <i class="fas fa-undo"></i>
+        <div class="feature-content">
+          <h4>3-day Return Policy</h4>
+          <p>Merchandise must be returned within 3 days.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <i class="fas fa-headset"></i>
+        <div class="feature-content">
+          <h4>24/7 Help Center</h4>
+          <p>Call Us/Whatsapp Us</p>
         </div>
       </div>
     </section>
@@ -119,117 +161,103 @@
   <!-- Footer -->
   <footer class="site-footer">
     <div class="footer-container">
-      
-      <!-- Contact Section -->
       <div class="footer-contact">
-        <h3>CONTACT US:</h3>
-        <p><i class="fas fa-phone"></i> TechieTown</p>
-        <a href="tel:+254799991551">+254 799 991 551</a><br>
-        <p><i class="fas fa-envelope"></i> Email:</p>
-        <a href="mailto:techiestown@gmail.com">techiestown@gmail.com</a><br>
-        <p><i class="fas fa-map-marker-alt"></i> Location:</p>
-        <span>Downtown Plaza, 2nd Floor, Shop 12</span>
+        <h3>Contact Us</h3>
+        <p><i class="fas fa-phone-alt"></i> <a href="tel:+254799991551">TechieTown: +2547 99 991 551</a></p>
+        <p><i class="fas fa-phone-alt"></i> <a href="tel:+254799991551">Support: +2547 99 991 551</a></p>
+        <p><i class="fas fa-envelope"></i> <a href="mailto:techiestown@gmail.com">techiestown@gmail.com</a></p>
+        <p><i class="fas fa-map-marker-alt"></i> Downtown Plaza, 2nd Floor, Shop 12</p>
       </div>
 
-      <!-- Quick Links -->
       <div class="footer-links">
-        <h3>CATEGORIES</h3>
+        <h3>Information</h3>
         <ul>
-          <li><a href="products.html">Smartphones</a></li>
-          <li><a href="products.html">Laptops</a></li>
-          <li><a href="products.html">Accessories</a></li>
-          <li><a href="products.html">Consoles</a></li>
-          <li><a href="products.html">Games</a></li>
-        </ul>
-
-        <h3>INFO</h3>
-        <ul>
-          <li><a href="newsletter.html"> About us</a></li>
-          <li><a href="contact.html">Contact</a></li>
-          <li><a href="#">Privacy Policy</a></li>
-          <li><a href="a.login.html">Admin Dashboard</a></li>
+          <li><a href="products.html">Our Products</a></li>
+          <li><a href="contact.html">Contact Us</a></li>
+          <li><a href="newsletter.html">About TechieTown</a></li>
+          <li><a href="tracking.html">Track Order</a></li>
+          <li><a href="a.login.html">Admin Portal</a></li>
         </ul>
       </div>
 
-      <!-- Social + Payment -->
       <div class="footer-social">
-        <h3>Follow Us:</h3>
+        <h3>Follow Us</h3>
         <div class="social-icons">
-          <a href="https://www.instagram.com/"><i class="fab fa-instagram"></i></a>
-          <a href="https://www.facebook.com/"><i class="fab fa-facebook"></i></a>
-          <a href="https://www.tiktok.com/"><i class="fab fa-tiktok"></i></a>
-          <a href="https://x.com/home"><i class="fab fa-x-twitter"></i></a>
+          <a href="https://www.instagram.com/" target="_blank"><i class="fab fa-instagram"></i></a>
+          <a href="https://www.facebook.com/" target="_blank"><i class="fab fa-facebook"></i></a>
+          <a href="https://www.tiktok.com/" target="_blank"><i class="fab fa-tiktok"></i></a>
+          <a href="https://x.com/home" target="_blank"><i class="fab fa-x-twitter"></i></a>
         </div>
-
         <div class="payment-icons">
-          <img src="myImg/socials/mpesa-seeklogo.com.svg" alt="M-Pesa" class="mpesa-logo">
+          <img src="myImg/socials/mpesa-seeklogo.com.svg" alt="M-Pesa" class="payment-logo">
           <img src="myImg/socials/Visa.svg" alt="Visa" class="payment-logo">
           <img src="myImg/socials/equitel.png" alt="Equitel" class="payment-logo">
           <img src="myImg/socials/mastercard.svg" alt="Mastercard" class="payment-logo">
         </div>
       </div>
     </div>
-
     <div class="footer-bottom">
-      <p>Copyright © 2025 TechieTown. All rights reserved. Designed by <a href="https://www.instagram.com/naina_ke/">@nainaKe_</a></p>
+      <p>&copy; 2025 TechieTown. All rights reserved. Designed by <a href="https://www.instagram.com/naina_ke/"
+          target="_blank">@nainaKe_</a></p>
     </div>
   </footer>
 
   <!-- Floating Buttons -->
-  <a href="tel:+254799991551" class="floating-call" title="Call Us">
-    <i class="fas fa-phone"></i>
+  <a href="tel:+254799991551" class="floating-call" title="Call Us" aria-label="Call TechieTown">
+    <i class="fas fa-phone-alt"></i>
   </a>
 
-  <a href="https://wa.me/254799991551?text=Hello%20TechieTown%2C%20I%20need%20some%20assistance" 
-     class="floating-whatsapp" 
-     title="Chat on WhatsApp" 
-     target="_blank">
+  <a href="https://wa.me/254799991551?text=Hello%20TechieTown%2C%20I%20need%20some%20assistance"
+    class="floating-whatsapp" title="Chat on WhatsApp" aria-label="WhatsApp TechieTown" target="_blank">
     <i class="fab fa-whatsapp"></i>
   </a>
 
+  <!-- Scripts -->
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
   <!-- External JS Files -->
-  <script src="js/cart.js"></script>
   <script src="js/miniCart.js"></script>
   <script src="js/ViewModal.js"></script>
 
 
   <!-- Menu + Scroll Animation -->
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const menuToggle = document.getElementById("menu-toggle");
-    const navLinks = document.getElementById("nav-links");
-    const header = document.querySelector(".site-header");
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const menuToggle = document.getElementById("menu-toggle");
+      const navLinks = document.getElementById("nav-links");
+      const header = document.querySelector(".site-header");
 
-    // Toggle mobile menu and update aria-expanded
-    if (menuToggle && navLinks) {
-      const toggleMenu = () => {
-        const isMenuOpen = navLinks.classList.toggle("show");
-        menuToggle.classList.toggle("active");
-        menuToggle.setAttribute("aria-expanded", isMenuOpen.toString());
-      };
+      // Toggle mobile menu and update aria-expanded
+      if (menuToggle && navLinks) {
+        const toggleMenu = () => {
+          const isMenuOpen = navLinks.classList.toggle("show");
+          menuToggle.classList.toggle("active");
+          menuToggle.setAttribute("aria-expanded", isMenuOpen.toString());
+        };
 
-      menuToggle.addEventListener("click", toggleMenu);
+        menuToggle.addEventListener("click", toggleMenu);
 
-      //keyboard accessibility (Enter or Space)
-      menuToggle.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          toggleMenu();
+        //keyboard accessibility (Enter or Space)
+        menuToggle.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            toggleMenu();
+          }
+        });
+      }
+
+      // Sticky header on scroll
+      window.addEventListener("scroll", () => {
+        if (window.scrollY > 50) {
+          header.classList.add("scrolled");
+        } else {
+          header.classList.remove("scrolled");
         }
       });
-    }
-
-    // Sticky header on scroll
-    window.addEventListener("scroll", () => {
-      if (window.scrollY > 50) {
-        header.classList.add("scrolled");
-      } else {
-        header.classList.remove("scrolled");
-      }
     });
-  });
-</script>
+  </script>
 
-
+  <script src="js/auth.js"></script>
 </body>
+
 </html>

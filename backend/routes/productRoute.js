@@ -2,6 +2,7 @@ import express from "express";
 import upload from "../middleware/uploadMiddleware.js";
 import {
   getProducts,
+  getProductById,
   createProduct,
   updateProduct,
   deleteProduct,
@@ -11,6 +12,7 @@ import { protect, adminOnly } from "../middleware/authMiddleware.js";
 const router = express.Router();
 
 router.get("/", getProducts);
+router.get("/:id", getProductById);
 router.post("/", protect, adminOnly, upload.single("image"), createProduct);
 router.put("/:id", protect, adminOnly, upload.single("image"), updateProduct);
 router.delete("/:id", protect, adminOnly, deleteProduct);

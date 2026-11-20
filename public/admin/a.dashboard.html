@@ -1,20 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>TechieTown Admin - Dashboard</title>
-
-  <!-- Styles -->
   <link rel="stylesheet" href="../css/admin.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-
-  <!-- Optional favicon -->
-  <link rel="icon" type="image/png" href="../assets/favicon.png" />
 </head>
 
 <body>
-  <aside class="sidebar">
+  <!-- ✅ Hamburger Menu Toggle -->
+  <div class="menu-toggle" id="menuToggle">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+
+  <!-- ✅ Overlay for mobile -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  
+  <aside class="sidebar" id="sidebar">
     <h2>Admin Panel</h2>
     <a href="a.dashboard.html" class="active"><i class="fas fa-chart-line"></i> Dashboard</a>
     <a href="a.products.html"><i class="fas fa-box"></i> Products</a>
@@ -24,12 +31,14 @@
     <a href="a.settings.html"><i class="fas fa-cogs"></i> Settings</a>
   </aside>
 
+
   <main class="main-content">
     <header>
       <h1 id="adminGreeting">Welcome, Admin 👋</h1>
       <button id="logoutBtn" class="btn-logout">Logout</button>
-
     </header>
+
+
 
     <!-- DASHBOARD STATS -->
     <div class="stats">
@@ -44,11 +53,71 @@
         <p>Orders</p>
       </div>
       <div class="card">
+        <i class="fas fa-users fa-2x"></i>
+        <h3 id="customerCount">0</h3>
+        <p>Customers</p>
+      </div>
+      <div class="card">
         <i class="fas fa-money-bill-wave fa-2x"></i>
         <h3 id="paymentCount">0</h3>
-        <p>Payments</p>
+        <p>Completed Payments</p>
+      </div>
+      <div class="card card-revenue">
+        <i class="fas fa-chart-line fa-2x"></i>
+        <h3 id="totalRevenue">KES 0</h3>
+        <p>Total Revenue</p>
       </div>
     </div>
+
+
+
+    <!-- QUICK ACTIONS -->
+    <section class="quick-actions">
+      <h2>Quick Actions</h2>
+      <div class="action-buttons">
+        <a href="/admin/a.products.html" class="action-btn">
+          <i class="fas fa-plus-circle"></i>
+          <span>Add Product</span>
+        </a>
+        <a href="/admin/a.orders.html" class="action-btn">
+          <i class="fas fa-list"></i>
+          <span>View Orders</span>
+        </a>
+        <a href="/admin/a.customers.html" class="action-btn">
+          <i class="fas fa-user-friends"></i>
+          <span>View Customers</span>
+        </a>
+        <a href="/admin/a.payments.html" class="action-btn">
+          <i class="fas fa-receipt"></i>
+          <span>View Payments</span>
+        </a>
+      </div>
+    </section>
+
+
+
+    <!-- RECENT ORDERS -->
+    <section>
+      <h2>Recent Orders</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Customer</th>
+            <th>Total Amount</th>
+            <th>Payment Status</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody id="ordersTableBody">
+          <tr>
+            <td colspan="5" style="text-align:center; color:#777;">Loading orders...</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+
 
     <!-- RECENT PAYMENTS -->
     <section>
@@ -70,31 +139,36 @@
         </tbody>
       </table>
     </section>
-
-    <!-- RECENT ORDERS -->
-    <section>
-      <h2>Recent Orders</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Order ID</th>
-            <th>User Email</th>
-            <th>Total Amount</th>
-            <th>Payment Status</th>
-            <th>Date</th>
-          </tr>
-        </thead>
-        <tbody id="ordersTableBody">
-          <tr>
-            <td colspan="5" style="text-align:center; color:#777;">Loading orders...</td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
   </main>
 
-  <!-- JS -->
-  <script src="../js/admin-dashboard.js" defer></script>
-  <script src="/js/adminLogout.js"></script>
+
+
+  <script type="module" src="../js/admin-common.js"></script>
+  <script type="module" src="../js/admin-dashboard.js"></script>
+
+
+
+  <!-- ✅ Hamburger menu script -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const menuToggle = document.getElementById("menuToggle");
+      const sidebar = document.getElementById("sidebar");
+      const overlay = document.getElementById("sidebarOverlay");
+
+      menuToggle.addEventListener("click", () => {
+        sidebar.classList.toggle("active");
+        overlay.classList.toggle("active");
+        menuToggle.classList.toggle("active");
+      });
+
+      overlay.addEventListener("click", () => {
+        sidebar.classList.remove("active");
+        overlay.classList.remove("active");
+        menuToggle.classList.remove("active");
+      });
+    });
+  </script>
+
 </body>
+
 </html>

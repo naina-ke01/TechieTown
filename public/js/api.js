@@ -1,15 +1,21 @@
+// public/js/api.js
+
 const API_BASE = window.location.hostname === "localhost"
   ? "http://localhost:3000/api"
   : "https://annelle-climatic-antwan.ngrok-free.dev/api";
 
+
 // Get auth headers
 function getAuthHeaders() {
-  const token = localStorage.getItem("adminToken");
+  // Use 'adminToken' for admin endpoints
+  const token = localStorage.getItem("adminToken"); 
   return {
     "Content-Type": "application/json",
-    ...(token && { Authorization: `Bearer ${token}` }),
+    // ONLY include Authorization header if a token exists
+    ...(token && { Authorization: `Bearer ${token}` }), 
   };
 }
+
 
 // Handle fetch responses
 async function handleResponse(res) {
@@ -18,11 +24,13 @@ async function handleResponse(res) {
 
   if (!res.ok) {
     const message = data?.error || data?.message || "Unexpected error";
-    throw new Error(message);
+    // Throw error with HTTP status for better debugging in admin-common.js
+    throw new Error(`[HTTP ${res.status}] ${message}`); 
   }
 
   return data;
 }
+
 
 // Auth API ----------------
 export const authAPI = {
@@ -34,68 +42,47 @@ export const authAPI = {
   }
 };
 
-// Products API (Admin Protected)
+
+// Admin Products API
 export const productsAPI = {
   fetchProducts: async () => {
-    const res = await fetch(`${API_BASE}/products`, {
+    // Assuming backend endpoint is /api/products for all products
+    const res = await fetch(`${API_BASE}/products`, { 
       headers: getAuthHeaders(),
     });
     return handleResponse(res);
   },
-  createProduct: async (payload) => {
-    const res = await fetch(`${API_BASE}/products`, {
-      method: "POST",
-      headers: getAuthHeaders(),
-      body: JSON.stringify(payload),
-    });
-    return handleResponse(res);
-  },
-  updateProduct: async (id, payload) => {
-    const res = await fetch(`${API_BASE}/products/${id}`, {
-      method: "PUT",
-      headers: getAuthHeaders(),
-      body: JSON.stringify(payload),
-    });
-    return handleResponse(res);
-  },
-  deleteProduct: async (id) => {
-    const res = await fetch(`${API_BASE}/products/${id}`, {
-      method: "DELETE",
-      headers: getAuthHeaders(),
-    });
-    return handleResponse(res);
-  },
+  // Add other product methods here (addProduct, deleteProduct, etc.)
 };
 
-// Orders API (Admin Protected)
+// Admin Orders API (NEW)
 export const ordersAPI = {
   fetchOrders: async () => {
-    const res = await fetch(`${API_BASE}/orders`, {
-      headers: getAuthHeaders(),
-    });
-    return handleResponse(res);
-  },
-  fetchOrderById: async (id) => {
-    const res = await fetch(`${API_BASE}/orders/${id}`, {
+    // Assuming backend endpoint is /api/admin/orders
+    const res = await fetch(`${API_BASE}/admin/orders`, { 
       headers: getAuthHeaders(),
     });
     return handleResponse(res);
   },
 };
 
-// Payments API (Admin Protected)
-export const paymentsAPI = {
-  fetchPayments: async () => {
-    const res = await fetch(`${API_BASE}/payments`, {
+// Admin Customers API (NEW)
+export const customersAPI = {
+  fetchCustomers: async () => {
+    // Assuming backend endpoint is /api/admin/customers
+    const res = await fetch(`${API_BASE}/admin/customers`, { 
       headers: getAuthHeaders(),
     });
     return handleResponse(res);
   },
-  startStkPush: async (phone, amount, orderId) => {
-    const res = await fetch(`${API_BASE}/payments/stkpush`, {
-      method: "POST",
+};
+
+// Admin Payments API (NEW)
+export const paymentsAPI = {
+  fetchPayments: async () => {
+    // Assuming backend endpoint is /api/admin/payments
+    const res = await fetch(`${API_BASE}/admin/payments`, {
       headers: getAuthHeaders(),
-      body: JSON.stringify({ phone, amount, orderId }),
     });
     return handleResponse(res);
   },
@@ -110,6 +97,7 @@ export const adminAPI = {
     return handleResponse(res);
   },
 };
+
 
 // Admin Authentication
 export async function adminLogin(email, password) {
@@ -126,17 +114,9 @@ export async function adminLogin(email, password) {
   if (data.token && data.user?.role === "admin") {
     localStorage.setItem("adminToken", data.token);
     localStorage.setItem("adminUser", JSON.stringify(data.user));
-    return data;
-  } else {
-    throw new Error("Access denied: Admins only.");
+  } else if (data.user?.role !== "admin") {
+    throw new Error("User is not authorized as an admin.");
   }
-}
 
-export function adminLogout() {
-  localStorage.removeItem("adminToken");
-  localStorage.removeItem("adminUser");
-}
-
-export function isAdminLoggedIn() {
-  return !!localStorage.getItem("adminToken");
+  return data;
 }
