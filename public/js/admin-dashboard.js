@@ -38,7 +38,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     try {
       console.log("📊 Fetching dashboard data...");
 
-      const response = await fetch("/api/admin/dashboard");
+      const token = localStorage.getItem("adminToken");
+      const response = await fetch("/api/admin/dashboard", {
+        headers: token ? { Authorization: `Bearer ${token}` } : {}
+      });
 
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -81,7 +84,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   // ===== FETCH CUSTOMER COUNT =====
   async function fetchCustomerCount() {
     try {
-      const response = await fetch("/api/admin/customers");
+      const token = localStorage.getItem("adminToken");
+      const response = await fetch("/api/admin/customers", {
+        headers: token ? { Authorization: `Bearer ${token}` } : {}
+      });
       const data = await response.json();
 
       const customerCountEl = document.getElementById("customerCount");

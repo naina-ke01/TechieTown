@@ -10,7 +10,10 @@ let currentEditingProductId = null;
 // ========================================
 async function loadProducts() {
     try {
-        const response = await fetch(`${API_BASE}/api/admin/products`);
+        const token = localStorage.getItem("adminToken");
+        const response = await fetch(`${API_BASE}/api/admin/products`, {
+            headers: token ? { Authorization: `Bearer ${token}` } : {}
+        });
         const data = await response.json();
 
         if (!data.success) {
@@ -81,7 +84,10 @@ function openAddModal() {
 
 async function openEditModal(productId) {
     try {
-        const response = await fetch(`${API_BASE}/api/admin/products`);
+        const token = localStorage.getItem("adminToken");
+        const response = await fetch(`${API_BASE}/api/admin/products`, {
+            headers: token ? { Authorization: `Bearer ${token}` } : {}
+        });
         const data = await response.json();
         const product = data.products.find((p) => p._id === productId);
 

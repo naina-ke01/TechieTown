@@ -9,7 +9,6 @@ import path from "path";
 import { fileURLToPath } from "url";
 import morgan from "morgan";
 import fs from "fs";
-import bcrypt from "bcrypt";
 
 import logger from "./utils/logger.js";
 import userRoute from "./routes/userRoute.js";
@@ -217,13 +216,10 @@ async function createDefaultAdmin() {
   try {
     const existing = await User.findOne({ role: "admin" });
     if (!existing) {
-      const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash("admin123", salt);
-
       await User.create({
         name: "TechieTown Admin",
         email: "admin@techietown.com",
-        password: hashedPassword,
+        password: "admin123",
         role: "admin",
       });
 

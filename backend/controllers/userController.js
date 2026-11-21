@@ -11,7 +11,8 @@ const generateToken = (user) => {
 // POST /api/users/login
 export const authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
-  const user = await User.findOne({ email });
+  const normalizedEmail = typeof email === "string" ? email.trim().toLowerCase() : "";
+  const user = await User.findOne({ email: normalizedEmail });
   if (!user) {
     res.status(401); // Use 401 for unauthorized
     throw new Error("Invalid credentials");
@@ -40,15 +41,16 @@ export const authUser = asyncHandler(async (req, res) => {
 // POST /api/users/register
 export const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
+  const normalizedEmail = typeof email === "string" ? email.trim().toLowerCase() : "";
 
   // Validate input
-  if (!name || !email || !password) {
+  if (!name || !normalizedEmail || !password) {
     res.status(400);
     throw new Error("Please provide all required fields");
   }
 
   // Check if user already exists
-  const userExists = await User.findOne({ email });
+  const userExists = await User.findOne({ email: normalizedEmail });
   if (userExists) {
     res.status(400);
     throw new Error("User already exists with this email");
@@ -63,7 +65,7 @@ export const registerUser = asyncHandler(async (req, res) => {
   // Create user
   const user = await User.create({
     name,
-    email,
+    email: normalizedEmail,
     password,
     role: "customer", // Default role is customer
   });
@@ -89,14 +91,15 @@ export const registerUser = asyncHandler(async (req, res) => {
 // Creates or updates a customer record during checkout
 export const createOrUpdateCustomer = asyncHandler(async (req, res) => {
   const { name, email, phone } = req.body;
+  const normalizedEmail = typeof email === "string" ? email.trim().toLowerCase() : "";
 
-  if (!email) {
+  if (!normalizedEmail) {
     res.status(400);
     throw new Error("Email is required");
   }
 
   // Find user by email
-  let user = await User.findOne({ email });
+  let user = await User.findOne({ email: normalizedEmail });
 
   if (user) {
     // Update existing user info if they are a customer
@@ -109,7 +112,7 @@ export const createOrUpdateCustomer = asyncHandler(async (req, res) => {
     // Create new customer (password is optional for customers)
     user = await User.create({
       name: name || "Guest Customer",
-      email,
+      email: normalizedEmail,
       phoneNumber: phone,
       role: "customer"
     });

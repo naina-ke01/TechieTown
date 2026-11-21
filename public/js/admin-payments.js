@@ -10,7 +10,10 @@ let allPayments = [];
 // ========================================
 async function loadPayments() {
     try {
-        const response = await fetch(`${API_BASE}/api/admin/payments`);
+        const token = localStorage.getItem("adminToken");
+        const response = await fetch(`${API_BASE}/api/admin/payments`, {
+            headers: token ? { Authorization: `Bearer ${token}` } : {}
+        });
         const data = await response.json();
 
         if (!data.success) {

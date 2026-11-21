@@ -125,8 +125,9 @@ export const initiateStkPush = async (req, res) => {
 
     // Build callback URL
     const callbackUrl = process.env.MPESA_CALLBACK_URL ||
-      process.env.NGROK_URL + "/api/payments/callback" ||
-      `${req.protocol}://${req.get("host")}/api/payments/callback`;
+      (process.env.NGROK_URL
+        ? `${process.env.NGROK_URL}/api/payments/callback`
+        : `${req.protocol}://${req.get("host")}/api/payments/callback`);
 
     logger.info(`🔗 Callback URL: ${callbackUrl}`);
 

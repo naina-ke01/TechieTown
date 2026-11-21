@@ -17,22 +17,22 @@ const router = express.Router();
 router.post("/login", adminLogin);  // <-- use adminLogin, not authUser
 
 // 📊 Dashboard Data
-router.get("/dashboard", getDashboardStats);
+router.get("/dashboard", protect, adminOnly, getDashboardStats);
 
 // 👤 Admin Profile
-router.get("/profile", getAdminProfile);
-router.put("/profile", updateAdminProfile);
+router.get("/profile", protect, adminOnly, getAdminProfile);
+router.put("/profile", protect, adminOnly, updateAdminProfile);
 
 // 📦 Products Management
-router.get("/products", getAllProducts);
+router.get("/products", protect, adminOnly, getAllProducts);
 
 // 📋 Orders Management
 router.get("/orders", protect, adminOnly, getAllOrders);
 
 // 💳 Payments Management
-router.get("/payments", getAllPayments);
+router.get("/payments", protect, adminOnly, getAllPayments);
 
 // 👥 Customers Management
-router.get("/customers", getAllCustomers);
+router.get("/customers", protect, adminOnly, getAllCustomers);
 
 export default router;

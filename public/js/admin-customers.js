@@ -81,7 +81,10 @@ async function loadCustomers() {
 // Enrich customers with order statistics
 async function enrichCustomersWithStats() {
     try {
-        const ordersResponse = await fetch(`${API_BASE}/api/admin/orders`);
+        const token = localStorage.getItem("adminToken");
+        const ordersResponse = await fetch(`${API_BASE}/api/admin/orders`, {
+            headers: token ? { Authorization: `Bearer ${token}` } : {}
+        });
         const ordersData = await ordersResponse.json();
 
         if (ordersData.success && ordersData.orders) {
@@ -206,7 +209,10 @@ async function viewCustomerDetails(customerId) {
         }
 
         // Fetch customer's orders
-        const ordersResponse = await fetch(`${API_BASE}/api/admin/orders`);
+        const token = localStorage.getItem("adminToken");
+        const ordersResponse = await fetch(`${API_BASE}/api/admin/orders`, {
+            headers: token ? { Authorization: `Bearer ${token}` } : {}
+        });
         const ordersData = await ordersResponse.json();
 
         let customerOrders = [];

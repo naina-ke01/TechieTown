@@ -18,6 +18,7 @@ const generateToken = (user) => {
 export const adminLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
+    const normalizedEmail = typeof email === "string" ? email.trim().toLowerCase() : "";
 
     console.log("🟡 Admin login attempt received");
     console.log("📧 Email:", email);
@@ -26,7 +27,7 @@ export const adminLogin = async (req, res) => {
       return res.status(400).json({ message: "Email and password are required" });
     }
 
-    const admin = await User.findOne({ email, role: "admin" });
+    const admin = await User.findOne({ email: normalizedEmail, role: "admin" });
     if (!admin) {
       console.warn("❌ No admin found with that email");
       return res.status(401).json({ message: "Invalid credentials" });
